@@ -6,7 +6,7 @@
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyUI(
  navbarPage("Al2O3:C Analysis",
-  tabPanel("Data import",
+  tabPanel(title = "Import",
    sidebarLayout(
     sidebarPanel(
       fileInput("file_data", accept = "*.xsyg",
@@ -24,8 +24,14 @@ shinyUI(
       )
 
      )##mainPanel
-    )##sidebarLayout
-   )##tablPanel - Data Import
+    ),##sidebarLayout
+    icon = icon("import", lib = "glyphicon")
+  ),##tabPanel - Data Import
+  tabPanel("Analysis"
+
+
+  , icon = icon("cog", lib = "glyphicon")
+  ) ##tablPanel - Analysis
  )##navbarPage
 )##ShinyUI
 
