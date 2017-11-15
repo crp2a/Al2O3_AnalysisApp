@@ -9,18 +9,23 @@ shinyUI(
   tabPanel("Data import",
    sidebarLayout(
     sidebarPanel(
-     fileInput("file_data", accept = "*.xsyg",
+      fileInput("file_data", accept = "*.xsyg",
                label = "Select XSYG-files containing your measurement data...", multiple = TRUE),
        hr(),
+       ##create all the needed tabs
+       uiOutput("tabs"),
        rHandsontableOutput("sample_info")
 
     ),
     mainPanel(
-       plotOutput("carousel")
+      fluidRow(
+       column(10,plotOutput("carousel"))
 
-     )
-    )
-   )##tablPanel --
+      )
+
+     )##mainPanel
+    )##sidebarLayout
+   )##tablPanel - Data Import
  )##navbarPage
 )##ShinyUI
 

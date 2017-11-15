@@ -21,19 +21,21 @@ file_info <- NULL
 
 
 # Carousel plot -------------------------------------------------------------------------------
-plot_carousel <<- function(positions = NULL, wheel = NULL){
+plot_carousel <<- function(positions = NULL, wheel = NULL, included = NULL){
 
   ##pre-calculation
   arc.step <- (2 * pi) / 40
   step <- 0
 
-  ##set position colour
-  col_position <- rep(rgb(0.9, 0.9, 0.9, 1), 40)
+  ##set colour
+  col_positions <- rep("grey", 40)
 
-    if(!is.null(positions)){
-      col_position[unique(positions)] <- rgb(0, 0.8, 0.2, 1)
+  if(!is.null(included)){
+    col_positions[which(included)] <- rgb(0, 0.8, 0.2, 1)
+    col_positions[which(!included)] <- rgb(1, 0, 0, 1)
 
-    }
+
+  }
 
   ##set layout matrix
   layout(mat = matrix(
@@ -64,9 +66,10 @@ plot_carousel <<- function(positions = NULL, wheel = NULL){
     col = "white"
   )
 
+  print(wheel)
   ##add wheel number
   if(!is.null(wheel)){
-    text(x = 0, y = 0, labels = wheel, cex = 2)
+    text(x = 0, y = 0, labels = wheel, cex = 2, col = "black")
 
   }
 
@@ -77,7 +80,7 @@ plot_carousel <<- function(positions = NULL, wheel = NULL){
       mid = c(cos(step), sin(step)),
       cex = 6,
       pch = 20,
-      col = col_position[i]
+      col = col_positions[i]
     )
 
 
