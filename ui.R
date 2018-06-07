@@ -42,12 +42,16 @@ shinyUI(
         wellPanel(
           ##signal integral
           sliderInput(
-            "analysis.signal_integral",
+            "settings_signal_integral",
             label = "Signal integral",
-            value = c(0,100),
+            value = settings_signal_integral,
             min = 0,
-            max = 100
-          )
+            max = 99
+          ),
+          checkboxInput(
+            "settings_cross_talk_correction",
+            label = "Apply cross-talk correction",
+            value = TRUE)
 
         ),
         div(
@@ -71,7 +75,32 @@ shinyUI(
       )#mainPanel
     )
   , icon = icon("cog", lib = "glyphicon")
-  ) ##tablPanel - Analysis
+  ), ##tablPanel - Analysis
+  # PANEL - About ------------------------------------------------------------------------------
+  tabPanel("About",
+    fluidRow(
+      column(8, offset = 1,
+        h4("About this shiny app"),
+        p("This software was developed for the IRAMAT-CRP2A, Université Bordeaux Montaigne (France)
+          to analyse Al2O3:C chips measurements."),
+        p("App version: 0.1.0 [2018-06-07]"),
+        p("Author: sebastian.kreutzer@u-bordeaux-montaigne.fr"),
+        h4("Relevant references"),
+        p("
+        Burow, C.,2018. calc_CosmicDoseRate(): Calculate the cosmic dose rate. Function version 0.5.2. In: Kreutzer, S.,
+        Burow, C., Dietze, M., Fuchs, M.C., Schmidt, C., Fischer, M., Friedrich, J., 2018. Luminescence:
+        Comprehensive Luminescence Dating Data Analysis. R package version 0.8.5. https://CRAN.R-project.org/package=Luminescence"),
+
+        p("Kreutzer, S., Burow, C., Dietze, M., Fuchs, Margret C., Schmidt, C., Fischer, M., Friedrich, J. 2018.
+        Luminescence: Comprehensive Luminescence Dating Data Analysis. R package version 0.8.5.
+        https://CRAN.R-project.org/package=Luminescence"),
+
+        p("Kreutzer S., Martin L., Guérin G., Tribolo C., Selva P., Mercier N., 2018.
+        Environmental Dose Rate Determination Using a Passive Dosimeter: Techniques and Workflow for alpha-Al2O3:C Chips.
+        Geochronometria 45, 56-67. doi: 10.1515/geochr-2015-0086. doi: 10.1515/geochr-2015-0086.")
+      )
+    ),icon = icon("info-sign", lib = "glyphicon")
+  )#About
  )##navbarPage
 )##ShinyUI
 

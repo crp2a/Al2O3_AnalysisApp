@@ -165,8 +165,13 @@ shinyServer(function(input, output, session) {
             png(file = temp_files[[i]], bg = "transparent", width = 700, height = 400)
               results[[i]] <- Luminescence::analyse_Al2O3C_Measurement(
                 object = file_data[[i]],
+                signal_integral = input$settings_signal_integral,
                 irradiation_time_correction = results_ITC,
-                cross_talk_correction = results_CT,
+                cross_talk_correction = if(input$settings_cross_talk_correction){
+                  results_CT
+                }else{
+                  NULL
+                },
                 plot = TRUE,
                 verbose = FALSE)
             dev.off()

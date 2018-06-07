@@ -24,6 +24,7 @@ load(file = calibration_data)
 file_data <- NULL
 file_info <- NULL
 file_structure <- NULL
+settings_signal_integral <- c(1,99)
 
 
 # Carousel plot -------------------------------------------------------------------------------
@@ -72,7 +73,6 @@ plot_carousel <<- function(positions = NULL, wheel = NULL, included = NULL){
     col = "white"
   )
 
-  print(wheel)
   ##add wheel number
   if(!is.null(wheel)){
     text(x = 0, y = 0, labels = wheel, cex = 2, col = "black")
