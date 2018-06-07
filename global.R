@@ -2,12 +2,11 @@
 ## Title:   Al2O3:C Analysis App
 ## Authors: Sebastian Kreutzer, IRAMAT-CRP2A, Universite Bordeaux Montaigne (France)
 ## Contact: sebastian.kreutzer@u-bordeaux-montainge.fr
-## Date:    2017-11-11
+## Date:    2018-06-07
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ##load needed packages
 library(shiny)
-library(shinyBS)
 library(Luminescence)
 library(shape)
 library(rhandsontable)
@@ -25,7 +24,8 @@ file_data <- NULL
 file_info <- NULL
 file_structure <- NULL
 settings_signal_integral <- c(1,99)
-
+results <<- list()
+temp_files <<- list()
 
 # Carousel plot -------------------------------------------------------------------------------
 plot_carousel <<- function(positions = NULL, wheel = NULL, included = NULL){

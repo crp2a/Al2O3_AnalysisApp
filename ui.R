@@ -57,7 +57,13 @@ shinyUI(
         div(
           actionButton("Analysis.run", "Run analysis ...", icon = NULL, width = NULL),
           align = "center"
+        ),
+        br(),
+        div(
+          uiOutput("export_analysis_results"),
+          align = "center"
         )
+
       ),
       ##=========================================MAIN==============================================##
       mainPanel(
@@ -68,8 +74,8 @@ shinyUI(
           )
         ),
         fluidRow(
-          column(10, offset = 1,
-            rHandsontableOutput("analysis_results", height = 600, width = 800)
+          column(10, offset = 2,
+              rHandsontableOutput("analysis_results", height = 600, width = 800)
           )
         )
       )#mainPanel

@@ -114,6 +114,7 @@ shinyServer(function(input, output, session) {
   observe({
     if(!is.null(input$sample_info)){
 
+
       ##create hash from row names
       hashA <- sum(as.numeric(row.names(sample_info_full$data[which(file_info[["wheels"]] == input$wheels), ])))
       hashB <- sum(as.numeric(row.names(hot_to_r(input$sample_info))))
@@ -131,6 +132,15 @@ shinyServer(function(input, output, session) {
        )
       }
 
+      if(!any(sample_info_full$data[["INCLUDE"]])){
+        showModal(modalDialog(
+          title = "Important message",
+          "Smart move, nothing included, nothing can go wrong...",
+          footer = modalButton("Ok, I'll try to include at least one aliquot.")
+        ))
+
+      }
+
     }## end hash
 
   })
@@ -146,11 +156,13 @@ shinyServer(function(input, output, session) {
       output$analysis_error <- renderText(NULL)
 
       ##make sure that the app does not crash
-      if(!is.null(file_data)){
+      if(!is.null(file_data) && any(sample_info_full$data[["INCLUDE"]])){
+
+        ##remove all values previously deselected
+        file_data[!sample_info_full$data[["INCLUDE"]]] <- NULL
+        results[!sample_info_full$data[["INCLUDE"]]] <<- NULL
 
         ##initialise values
-        results <- list()
-        temp_files <<- list()
         temp_dir <- tempdir()
 
         ##RUN ANALYSIS
@@ -163,7 +175,7 @@ shinyServer(function(input, output, session) {
             incProgress(i)
             temp_files[[i]] <<- paste0(temp_dir,"/ALQ_",i,".png")
             png(file = temp_files[[i]], bg = "transparent", width = 700, height = 400)
-              results[[i]] <- Luminescence::analyse_Al2O3C_Measurement(
+              results[[i]] <<- Luminescence::analyse_Al2O3C_Measurement(
                 object = file_data[[i]],
                 signal_integral = input$settings_signal_integral,
                 irradiation_time_correction = results_ITC,
@@ -181,17 +193,32 @@ shinyServer(function(input, output, session) {
 
       ##create data.frame
       df <- cbind(
-        sample_info_full$data[,-c(4)],
-        merge_RLum(results)$data[,c(1,2)],
-        EXPORT = paste0("<a href='http://",unlist(temp_files),"'>download plot</a>"))
+        sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(4)],
+        merge_RLum(results)$data[,c(1,2)])
 
       ##render handsontable
       output$analysis_results <- renderRHandsontable({
           rhandsontable(data = df, readOnly = TRUE, selectCallback = TRUE) %>%
-            hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE) %>%
+            hot_context_menu(
+              allowRowEdit = FALSE,
+              allowColEdit = FALSE,
+              customOpts = list(
+                csv = list(name = "Download to CSV",
+                           callback = htmlwidgets::JS(
+                             "function (key, options) {
+                         var csv = csvString(this, sep=',', dec='.');
+
+                         var link = document.createElement('a');
+                         link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
+                           encodeURIComponent(csv));
+                         link.setAttribute('download', 'data.csv');
+
+                         document.body.appendChild(link);
+                         link.click();
+                         document.body.removeChild(link);
+                       }")))) %>%
             hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE) %>%
-            hot_heatmap(cols = 4) %>%
-            hot_col(6, renderer = htmlwidgets::JS("safeHtmlRenderer"))
+            hot_heatmap(cols = 4)
 
 
         })
@@ -205,10 +232,30 @@ shinyServer(function(input, output, session) {
                alt = paste("Image number", input$analysis_results_select$select$r))
         }, deleteFile = FALSE)
 
+        ##add download button if results are available
+        output$export_analysis_results <- renderUI({
+          if(length(results)>0)
+            downloadButton(outputId = "download_analysis_results", label = "Download full results as CSV")
+
+        })
+
+        #TODO
+        # ##download handler
+        # output$download_analysis_results <- downloadHandler(
+        #    filename = paste0(
+        #           sub(pattern = "\\.CNF", replacement = "",
+        #                          ignore.case = TRUE,
+        #                         x = names$input_name),".TKA"),
+        #       content = function(file){
+        #           rxylib::convert_xy2TKA(object = data(), file = file)
+        #
+        #   })
+
       }else{
         output$analysis_error <- renderText("Error: No file imported!")
 
       }
+
    })#run analysis tab
 
    ##provide graphical output enviroment
@@ -222,6 +269,7 @@ shinyServer(function(input, output, session) {
     }, deleteFile = FALSE)
 
    })
+
 
  }
 )
