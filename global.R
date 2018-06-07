@@ -7,6 +7,7 @@
 
 ##load needed packages
 library(shiny)
+library(shinyBS)
 library(Luminescence)
 library(shape)
 library(rhandsontable)
@@ -15,9 +16,14 @@ library(rhandsontable)
 options(shiny.maxRequestSize=30*1024^2)
 enableBookmarking(store = "server")
 
+##load calibration data
+calibration_data <- list.files(path = "calibration_data/", full.names = TRUE)
+load(file = calibration_data)
+
 ##initialise data
 file_data <- NULL
 file_info <- NULL
+file_structure <- NULL
 
 
 # Carousel plot -------------------------------------------------------------------------------

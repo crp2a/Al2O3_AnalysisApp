@@ -17,12 +17,15 @@ shinyServer(function(input, output, session) {
           )
 
           ##import info
-          file_info <- read_XSYG2R(
+          file_info <<- read_XSYG2R(
             file = as.list(input$file_data$datapath),
             fastForward = TRUE,
             verbose = FALSE,
             import = FALSE
           )
+
+          ##create file structure object
+          file_structure <<- structure_RLum(file_data)
 
           ##deconstruct to wheels
           ##extract needed columns
@@ -118,7 +121,6 @@ shinyServer(function(input, output, session) {
       ##update table values if rownumbers match, otherwise we overwrite
       if(hashA == hashB){
         sample_info_full$data[which(file_info[["wheels"]] == input$wheels), ] <<- hot_to_r(input$sample_info)
-      }
 
       ##update plot
       output$carousel <- renderPlot({
@@ -126,11 +128,95 @@ shinyServer(function(input, output, session) {
           included =  sample_info_full$data[["INCLUDE"]][which(file_info[["wheels"]] == input$wheels)],
           wheel = input$wheels
           )}, height = 500, width = 500
-      )
-    }
+       )
+      }
+
+    }## end hash
 
   })
 
+
+  # PANEL Analysis ------------------------------------------------------------------------------
+  ##=============================##
+  ##run analysis
+  ##=============================##
+  observeEvent(input$Analysis.run, {
+
+      #preset error message
+      output$analysis_error <- renderText(NULL)
+
+      ##make sure that the app does not crash
+      if(!is.null(file_data)){
+
+        ##initialise values
+        results <- list()
+        temp_files <<- list()
+        temp_dir <- tempdir()
+
+        ##RUN ANALYSIS
+        ##with progress bar
+        withProgress(
+          message = "Analysing data ...", min = 0, max = length(file_data), {
+
+          ##run analysis
+          for(i in 1:length(file_data)){
+            incProgress(i)
+            temp_files[[i]] <<- paste0(temp_dir,"/ALQ_",i,".png")
+            png(file = temp_files[[i]], bg = "transparent", width = 700, height = 400)
+              results[[i]] <- Luminescence::analyse_Al2O3C_Measurement(
+                object = file_data[[i]],
+                irradiation_time_correction = results_ITC,
+                cross_talk_correction = results_CT,
+                plot = TRUE,
+                verbose = FALSE)
+            dev.off()
+
+          }
+        })
+
+      ##create data.frame
+      df <- cbind(
+        sample_info_full$data[,-c(4)],
+        merge_RLum(results)$data[,c(1,2)],
+        EXPORT = paste0("<a href='http://",unlist(temp_files),"'>download plot</a>"))
+
+      ##render handsontable
+      output$analysis_results <- renderRHandsontable({
+          rhandsontable(data = df, readOnly = TRUE, selectCallback = TRUE) %>%
+            hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE) %>%
+            hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE) %>%
+            hot_heatmap(cols = 4) %>%
+            hot_col(6, renderer = htmlwidgets::JS("safeHtmlRenderer"))
+
+
+        })
+
+        ##show first graphic (otherwise it remains empty here, which is odd)
+        output$analysis_results.plot <- renderImage({
+          filename <- temp_files[[1]]
+
+          #Return a list containing the filename and alt text
+          list(src = filename,
+               alt = paste("Image number", input$analysis_results_select$select$r))
+        }, deleteFile = FALSE)
+
+      }else{
+        output$analysis_error <- renderText("Error: No file imported!")
+
+      }
+   })#run analysis tab
+
+   ##provide graphical output enviroment
+   observeEvent(input$analysis_results_select, {
+     output$analysis_results.plot <- renderImage({
+       filename <- temp_files[[input$analysis_results_select$select$r]]
+
+        #Return a list containing the filename and alt text
+        list(src = filename,
+             alt = paste("Image number", input$analysis_results_select$select$r))
+    }, deleteFile = FALSE)
+
+   })
 
  }
 )
