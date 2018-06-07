@@ -30,7 +30,7 @@ shinyUI(
     icon = icon("import", lib = "glyphicon")
   ),##tabPanel - Data Import
   # PANEL - Analysis ------------------------------------------------------------------------------
-  tabPanel("Analysis",
+  tabPanel("Analyse",
      ##=========================================SIDEBAR============================================##
      sidebarLayout(
       sidebarPanel(
@@ -84,6 +84,37 @@ shinyUI(
     )
   , icon = icon("cog", lib = "glyphicon")
   ), ##tablPanel - Analysis
+
+
+  # PANEL - Post-processing------------------------------------------------------------------------
+  tabPanel("Post-processing",
+           ##=========================================SIDEBAR=====================================##
+           sidebarLayout(
+             sidebarPanel(
+               div(
+                 actionButton("Post-processing.run", icon("filter"),
+                              "Aggregate data ...", icon = NULL, width = NULL,
+                              style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
+                 align = "center"
+               )
+             ),
+           ##=========================================MAIN========================================##
+           mainPanel(
+             fluidRow(
+               column(10, offset = 1,
+                      #h3(textOutput("analysis_error"), align = "center"),
+                      plotOutput(outputId = "postprocessing_boxplot", width = 600, height = 400)
+               )
+             ),
+             fluidRow(
+               column(10, offset = 2,
+                      rHandsontableOutput("postprocessing_results", height = 600, width = 800)
+               )
+             )
+           )
+          )
+  , icon = icon("random", lib = "glyphicon")
+  ),
   # PANEL - About ------------------------------------------------------------------------------
   tabPanel("About",
     fluidRow(

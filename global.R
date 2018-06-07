@@ -10,6 +10,8 @@ library(shiny)
 library(Luminescence)
 library(shape)
 library(rhandsontable)
+library(plyr)
+library(ggplot2)
 
 ##Shiny settings
 options(shiny.maxRequestSize=30*1024^2)
@@ -26,6 +28,7 @@ file_structure <- NULL
 settings_signal_integral <- c(1,99)
 results <<- list()
 temp_files <<- list()
+df <- NULL
 
 # Carousel plot -------------------------------------------------------------------------------
 plot_carousel <<- function(positions = NULL, wheel = NULL, included = NULL){

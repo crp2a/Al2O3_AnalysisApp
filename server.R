@@ -192,7 +192,7 @@ shinyServer(function(input, output, session) {
         })
 
       ##create data.frame
-      df <- cbind(
+      df <<- cbind(
         sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(4)],
         merge_RLum(results)$data[,c(1,2)])
 
@@ -281,6 +281,64 @@ shinyServer(function(input, output, session) {
     }, deleteFile = FALSE)
 
    })
+
+
+  # Post-processing -----------------------------------------------------------------------------
+   observeEvent(input$`Post-processing.run`,{
+
+     ##group by sample ID
+     df_grouped <- dlply(df, .variables = "SAMPLE_ID", .fun = identity)
+
+     ##error weighted mean for each position
+     df_combined <- t(vapply(1:length(df_grouped), function(x){
+       unlist(calc_Statistics(
+         df_grouped[[x]][,c("DE","DE_ERROR")], n.MCM = 1000)[["MCM"]][c("mean", "sd.abs")])
+     }, FUN.VALUE = numeric(length = 2)))
+
+     ##add sample ID
+     df_grouped <-
+       data.frame(ID = attributes(df_grouped)$names,
+                  df_combined,
+                  stringsAsFactors = FALSE)
+
+     ##calculate relative error
+     df_grouped <- cbind(df_grouped, sd.rel = df_grouped[[3]]/df_grouped[[2]])
+
+     # ##translate to µGy
+     source_dose_rate <- calc_SourceDoseRate(
+       measurement.date = as.Date(strtrim(file_info$startDate[1],8), format = "%Y%m%d"),
+       calib.date = as.Date(sourceDR_FINAL$CAL_DATE),
+       calib.dose.rate = c(sourceDR_FINAL$DR),
+       calib.error = c(sourceDR_FINAL$DR_ERROR)
+     )$dose.rate
+
+     ##combine
+     results_final <- cbind(
+       df_grouped,
+       DOSE = df_grouped[["mean"]] * source_dose_rate[,1],
+       DOSE.ERROR = df_grouped[["sd.abs"]] * source_dose_rate[,1]
+     )
+
+     ##create output plot
+     ##boxplot
+     output$postprocessing_boxplot <- renderPlot({
+     ggplot(data = df, aes(x = as.factor(SAMPLE_ID), y = DE * source_dose_rate[,1], col = SAMPLE_ID)) +
+       geom_boxplot() +
+       xlab("Dosimeter ID") +
+       ylab(expression(paste(D[e], " [µGy]"))) +
+       ggtitle("Totally Absorbed Dose")
+     })
+
+
+     ##create table output
+     output$postprocessing_results <- renderRHandsontable({
+       colnames(results_final) <- toupper(colnames( results_final))
+       rhandsontable(data = results_final, readOnly = TRUE, selectCallback = TRUE)
+
+     })
+
+
+   })#observeEvent Post-processing
 
 
  }
