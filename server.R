@@ -235,21 +235,33 @@ shinyServer(function(input, output, session) {
         ##add download button if results are available
         output$export_analysis_results <- renderUI({
           if(length(results)>0)
-            downloadButton(outputId = "download_analysis_results", label = "Download full results as CSV")
+            downloadButton(
+              outputId = "download_analysis_results",
+              label = "Download results")
 
         })
 
-        #TODO
-        # ##download handler
-        # output$download_analysis_results <- downloadHandler(
-        #    filename = paste0(
-        #           sub(pattern = "\\.CNF", replacement = "",
-        #                          ignore.case = TRUE,
-        #                         x = names$input_name),".TKA"),
-        #       content = function(file){
-        #           rxylib::convert_xy2TKA(object = data(), file = file)
-        #
-        #   })
+        ##download handler for results
+        output$download_analysis_results <- downloadHandler(
+           filename = "Analysis_Results.zip",
+              content = function(file){
+                  temp_results <- merge_RLum(results)
+                  tmpdir <- tempdir()
+                  fs <- vapply(names(temp_results), function(f){
+                    fs <- paste0(tmpdir,"/",f,".csv")
+                    write.table(
+                      x = temp_results@data[[f]],
+                      file = fs,
+                      sep = ";",
+                      row.names = FALSE
+                    )
+                    return(fs)
+
+                  }, character(1))
+                  zip(zipfile = file, files = fs, flags = "-j")
+                },
+                contentType = "application/zip"
+            )
 
       }else{
         output$analysis_error <- renderText("Error: No file imported!")

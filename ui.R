@@ -45,7 +45,7 @@ shinyUI(
             "settings_signal_integral",
             label = "Signal integral",
             value = settings_signal_integral,
-            min = 0,
+            min = 1,
             max = 99
           ),
           checkboxInput(
@@ -55,11 +55,13 @@ shinyUI(
 
         ),
         div(
-          actionButton("Analysis.run", "Run analysis ...", icon = NULL, width = NULL),
+          actionButton("Analysis.run", icon("play-circle"),
+                       "Run analysis ...", icon = NULL, width = NULL,
+                       style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
           align = "center"
         ),
         br(),
-        div(
+        tags$div(title="Download combined results as returned by the R function analyse_Al2O3C_Measurements().",
           uiOutput("export_analysis_results"),
           align = "center"
         )
