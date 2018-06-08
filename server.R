@@ -27,6 +27,9 @@ shinyServer(function(input, output, session) {
           ##create file structure object
           file_structure <<- structure_RLum(file_data)
 
+          ##TODO
+          ##add server logic for verifying the import status
+
           ##deconstruct to wheels
           ##extract needed columns
           wheels <- file_info[["position"]]
@@ -78,7 +81,9 @@ shinyServer(function(input, output, session) {
         FILENAME = file_info$name,
         POSITION = as.integer(file_info$position),
         SAMPLE_ID = "unkown",
+        TYPE = dosimeter_type[1],
         INCLUDE = TRUE,
+        IMPORT_STATUS = "OK",
         stringsAsFactors = FALSE
       ))
 
@@ -87,7 +92,9 @@ shinyServer(function(input, output, session) {
       rhandsontable(data = sample_info_full$data[which(file_info[["wheels"]] == "wheel1"), ]) %>%
         hot_table(highlightCol = TRUE, highlightRow = TRUE)  %>%
         hot_col("FILENAME", readOnly = TRUE) %>%
-        hot_col("POSITION", readOnly = TRUE)
+        hot_col("POSITION", readOnly = TRUE) %>%
+        hot_col("TYPE", type = "dropdown", source = dosimeter_type) %>%
+        hot_col("IMPORT_STATUS", readOnly = TRUE)
 
     })
 
@@ -101,7 +108,9 @@ shinyServer(function(input, output, session) {
     rhandsontable(data = sample_info_full$data[which(file_info[["wheels"]] == input$wheels), ]) %>%
       hot_table(highlightCol = TRUE, highlightRow = TRUE)  %>%
       hot_col("FILENAME", readOnly = TRUE) %>%
-      hot_col("POSITION", readOnly = TRUE)
+      hot_col("POSITION", readOnly = TRUE) %>%
+      hot_col("TYPE", type = "dropdown", source = dosimeter_type) %>%
+      hot_col("IMPORT_STATUS", readOnly = TRUE)
 
     })
 
@@ -193,7 +202,7 @@ shinyServer(function(input, output, session) {
 
       ##create data.frame
       df <<- cbind(
-        sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(4)],
+        sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(5,6)],
         merge_RLum(results)$data[,c(1,2)])
 
       ##render handsontable
@@ -218,7 +227,7 @@ shinyServer(function(input, output, session) {
                          document.body.removeChild(link);
                        }")))) %>%
             hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE) %>%
-            hot_heatmap(cols = 4)
+            hot_heatmap(cols = 5)
 
 
         })

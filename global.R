@@ -29,6 +29,7 @@ settings_signal_integral <- c(1,99)
 results <<- list()
 temp_files <<- list()
 df <- NULL
+dosimeter_type <- c("field", "travel")
 
 # Carousel plot -------------------------------------------------------------------------------
 plot_carousel <<- function(positions = NULL, wheel = NULL, included = NULL){
