@@ -13,17 +13,19 @@ shinyUI(
     sidebarPanel(
       fileInput("file_data", accept = "*.xsyg",
                label = "Select XSYG-files containing your measurement data...", multiple = TRUE),
-       hr(),
-       ##create all the needed tabs
-       uiOutput("tabs"),
-       rHandsontableOutput("sample_info")
-
-    ),
-      mainPanel(
         fluidRow(
-         column(10,plotOutput("carousel"))
-
+          br(),
+          div(
+            plotOutput("carousel"),
+            align = "center"
+          )
         )
+
+    , width = 4),
+      mainPanel(
+        ##create all the needed tabs
+        uiOutput("tabs"),
+        rHandsontableOutput("sample_info")
 
      )##mainPanel
     ),##sidebarLayout
@@ -102,7 +104,6 @@ shinyUI(
            mainPanel(
              fluidRow(
                column(10, offset = 1,
-                      #h3(textOutput("analysis_error"), align = "center"),
                       plotOutput(outputId = "postprocessing_boxplot", width = 600, height = 400)
                )
              ),

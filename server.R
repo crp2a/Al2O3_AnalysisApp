@@ -128,7 +128,7 @@ shinyServer(function(input, output, session) {
         plot_carousel(positions = as.numeric(file_info$position),
           included =  sample_info_full$data[["INCLUDE"]][which(file_info[["wheels"]] == input$wheels)],
           wheel = input$wheels
-          )}, height = 500, width = 500
+          )}, height = 250, width = 250
        )
       }
 
