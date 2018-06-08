@@ -97,6 +97,8 @@ shinyUI(
         ),
         fluidRow(
           column(10, offset = 1,
+              br(),
+              br(),
               rHandsontableOutput("analysis_results", height = 600, width = 800)
           )
          )

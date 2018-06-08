@@ -199,6 +199,7 @@ shinyServer(function(input, output, session) {
           }
 
         ##run again (otherwise the data are not treated correctly)
+        ##warning handling taken from https://github.com/daattali/advanced-shiny/blob/master/show-warnings-messages/app.R
         results <<- withCallingHandlers({
           shinyjs::html(id = "warnings", html = "")
           analyse_Al2O3C_Measurement(
@@ -355,6 +356,17 @@ shinyServer(function(input, output, session) {
        DOSE.ERROR = df_grouped[["sd.abs"]] * source_dose_rate[,1]
      )
 
+     ##add columns of they do not yet exist
+     if(!("DURATION" %in% colnames(results_final))){
+       results_final <- cbind(
+         results_final,
+         DATE_IN = Sys.Date(),
+         DATE_OUT = Sys.Date(),
+         DURATION = 0
+         )
+
+     }
+
      ##create output plot
      ##boxplot
      output$postprocessing_boxplot <- renderPlot({
@@ -363,7 +375,7 @@ shinyServer(function(input, output, session) {
        xlab("Dosimeter ID") +
        ylab(expression(paste(D[e], " [µGy]"))) +
        ggtitle("Totally Absorbed Dose")
-     })
+     }, width = 800)
 
 
      ##create table output
@@ -384,7 +396,11 @@ shinyServer(function(input, output, session) {
                          document.body.appendChild(link);
                          link.click();
                          document.body.removeChild(link);
-                       }"))))
+                       }")))) %>%
+         hot_col("DATE_IN", readOnly = FALSE) %>%
+         hot_col("DATE_OUT", readOnly = FALSE)
+
+
      })
 
 
