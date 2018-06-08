@@ -6,13 +6,13 @@
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ##load needed packages
-library(shiny)
-library(shinyjs)
-library(Luminescence)
-library(shape)
-library(rhandsontable)
-library(plyr)
-library(ggplot2)
+require(shiny)
+require(shinyjs)
+require(Luminescence)
+require(shape)
+require(rhandsontable)
+require(plyr)
+require(ggplot2)
 
 ##Shiny settings
 options(shiny.maxRequestSize=30*1024^2)

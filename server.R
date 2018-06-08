@@ -2,7 +2,7 @@
 ## Title:   Al2O3:C Analysis App
 ## Authors: Sebastian Kreutzer, IRAMAT-CRP2A, Universite Bordeaux Montaigne (France)
 ## Contact: sebastian.kreutzer@u-bordeaux-montainge.fr
-## Date:    2017-11-11
+## Date:    2018-06-08
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyServer(function(input, output, session) {
 
@@ -23,6 +23,10 @@ shinyServer(function(input, output, session) {
             verbose = FALSE,
             import = FALSE
           )
+
+          ##replace names by real file names
+          file_info[["name"]] <<- rep(input$file_data$name, each = nrow(file_info)/length(input$file_data$name))
+
 
           ##create file structure object
           file_structure <<- structure_RLum(file_data)
@@ -79,6 +83,7 @@ shinyServer(function(input, output, session) {
     sample_info_full <<- reactiveValues(
       data = data.frame(
         FILENAME = file_info$name,
+        WHEEL = as.character(file_info[["wheels"]]),
         POSITION = as.integer(file_info$position),
         SAMPLE_ID = "unkown",
         TYPE = dosimeter_type[1],
@@ -92,6 +97,7 @@ shinyServer(function(input, output, session) {
       rhandsontable(data = sample_info_full$data[which(file_info[["wheels"]] == "wheel1"), ]) %>%
         hot_table(highlightCol = TRUE, highlightRow = TRUE)  %>%
         hot_col("FILENAME", readOnly = TRUE) %>%
+        hot_col("WHEEL", readOnly = TRUE) %>%
         hot_col("POSITION", readOnly = TRUE) %>%
         hot_col("TYPE", type = "dropdown", source = dosimeter_type) %>%
         hot_col("IMPORT_STATUS", readOnly = TRUE)
@@ -108,6 +114,7 @@ shinyServer(function(input, output, session) {
     rhandsontable(data = sample_info_full$data[which(file_info[["wheels"]] == input$wheels), ]) %>%
       hot_table(highlightCol = TRUE, highlightRow = TRUE)  %>%
       hot_col("FILENAME", readOnly = TRUE) %>%
+      hot_col("WHEEL", readOnly = TRUE) %>%
       hot_col("POSITION", readOnly = TRUE) %>%
       hot_col("TYPE", type = "dropdown", source = dosimeter_type) %>%
       hot_col("IMPORT_STATUS", readOnly = TRUE)
@@ -224,7 +231,7 @@ shinyServer(function(input, output, session) {
 
       ##create data.frame
       df <<- cbind(
-          sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(5,6)],
+          sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(6,7)],
           results@data$data[,c(1,2)])
 
       ##correct for the travel dosimeter
@@ -255,7 +262,7 @@ shinyServer(function(input, output, session) {
                          document.body.removeChild(link);
                        }")))) %>%
             hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE) %>%
-            hot_heatmap(cols = 5)
+            hot_heatmap(cols = 6)
 
 
         })
@@ -402,7 +409,6 @@ shinyServer(function(input, output, session) {
 
 
      })
-
 
    })#observeEvent Post-processing
 
