@@ -363,8 +363,22 @@ shinyServer(function(input, output, session) {
      ##create table output
      output$postprocessing_results <- renderRHandsontable({
        colnames(results_final) <- toupper(colnames( results_final))
-       rhandsontable(data = results_final, readOnly = TRUE, selectCallback = TRUE)
+       rhandsontable(data = results_final, readOnly = TRUE, selectCallback = TRUE,
+       customOpts = list(
+         csv = list(name = "Download to CSV",
+                    callback = htmlwidgets::JS(
+                      "function (key, options) {
+                         var csv = csvString(this, sep=',', dec='.');
 
+                         var link = document.createElement('a');
+                         link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
+                           encodeURIComponent(csv));
+                         link.setAttribute('download', 'data.csv');
+
+                         document.body.appendChild(link);
+                         link.click();
+                         document.body.removeChild(link);
+                       }"))))
      })
 
 
