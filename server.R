@@ -198,9 +198,10 @@ shinyServer(function(input, output, session) {
             dev.off()
           }
 
-        # ##TODO - return error
         ##run again (otherwise the data are not treated correctly)
-        results <<- analyse_Al2O3C_Measurement(
+        results <<- withCallingHandlers({
+          shinyjs::html(id = "warnings", html = "")
+          analyse_Al2O3C_Measurement(
             object = file_data,
             travel_dosimeter = travel_dosimeters,
             signal_integral = input$settings_signal_integral,
@@ -212,8 +213,13 @@ shinyServer(function(input, output, session) {
             },
             plot = FALSE,
             verbose = FALSE)
+        },
+        warning = function(m) {
+          shinyjs::html(id = "warnings", html = paste(m$message, "\n"), add = TRUE)
+        })
 
       })#end progressbar
+
 
       ##create data.frame
       df <<- cbind(

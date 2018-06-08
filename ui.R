@@ -71,6 +71,19 @@ shinyUI(
         tags$div(title="Download combined results as returned by the R function analyse_Al2O3C_Measurements().",
           uiOutput("export_analysis_results"),
           align = "center"
+        ),
+        br(),
+        shinyjs::useShinyjs(),
+        tags$head(
+          tags$style("#warnings{color: red;
+                     font-size: 11px;
+                     font-style: monospace;
+                     }"
+         )
+        ),
+        div(
+          verbatimTextOutput("warnings"),
+          align = "center"
         )
 
       ),
@@ -83,10 +96,10 @@ shinyUI(
           )
         ),
         fluidRow(
-          column(10, offset = 2,
+          column(10, offset = 1,
               rHandsontableOutput("analysis_results", height = 600, width = 800)
           )
-        )
+         )
       )#mainPanel
     )
   , icon = icon("cog", lib = "glyphicon")

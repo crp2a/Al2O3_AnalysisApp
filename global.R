@@ -7,6 +7,7 @@
 
 ##load needed packages
 library(shiny)
+library(shinyjs)
 library(Luminescence)
 library(shape)
 library(rhandsontable)
