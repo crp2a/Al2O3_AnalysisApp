@@ -137,7 +137,7 @@ shinyServer(function(input, output, session) {
         plot_carousel(positions = as.numeric(file_info$position),
           included =  sample_info_full$data[["INCLUDE"]][which(file_info[["wheels"]] == input$wheels)],
           wheel = input$wheels
-          )}, height = 250, width = 250
+          )}, height = 300, width = 300
        )
       }
 
@@ -169,7 +169,13 @@ shinyServer(function(input, output, session) {
 
         ##remove all values previously deselected
         file_data[!sample_info_full$data[["INCLUDE"]]] <- NULL
-        results[!sample_info_full$data[["INCLUDE"]]] <<- NULL
+
+        ##identify travel dosimeters
+        travel_dosimeters <- which(
+          sample_info_full$data[["TYPE"]][sample_info_full$data[["INCLUDE"]]] == 'travel')
+
+        if(length(travel_dosimeters) == 0 || !input$settings_travel_dosimeter)
+          travel_dosimeters <- NULL
 
         ##initialise values
         temp_dir <- tempdir()
@@ -179,31 +185,46 @@ shinyServer(function(input, output, session) {
         withProgress(
           message = "Analysing data ...", min = 0, max = length(file_data), {
 
-          ##run analysis
+          ##run analysis for the plots
           for(i in 1:length(file_data)){
             incProgress(i)
             temp_files[[i]] <<- paste0(temp_dir,"/ALQ_",i,".png")
             png(file = temp_files[[i]], bg = "transparent", width = 700, height = 400)
-              results[[i]] <<- Luminescence::analyse_Al2O3C_Measurement(
+              Luminescence::analyse_Al2O3C_Measurement(
                 object = file_data[[i]],
                 signal_integral = input$settings_signal_integral,
-                irradiation_time_correction = results_ITC,
-                cross_talk_correction = if(input$settings_cross_talk_correction){
-                  results_CT
-                }else{
-                  NULL
-                },
                 plot = TRUE,
                 verbose = FALSE)
             dev.off()
-
           }
-        })
+
+        # ##TODO - return error
+        ##run again (otherwise the data are not treated correctly)
+        results <<- analyse_Al2O3C_Measurement(
+            object = file_data,
+            travel_dosimeter = travel_dosimeters,
+            signal_integral = input$settings_signal_integral,
+            irradiation_time_correction = results_ITC,
+            cross_talk_correction = if(input$settings_cross_talk_correction){
+              results_CT
+            }else{
+              NULL
+            },
+            plot = FALSE,
+            verbose = FALSE)
+
+      })#end progressbar
 
       ##create data.frame
       df <<- cbind(
-        sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(5,6)],
-        merge_RLum(results)$data[,c(1,2)])
+          sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(5,6)],
+          results@data$data[,c(1,2)])
+
+      ##correct for the travel dosimeter
+      if(!is.null(results@data[["data_TDcorrected"]])){
+        df[-travel_dosimeters,5:6] <<- round(results@data[["data_TDcorrected"]][,1:2],4)
+
+      }
 
       ##render handsontable
       output$analysis_results <- renderRHandsontable({
@@ -254,7 +275,7 @@ shinyServer(function(input, output, session) {
         output$download_analysis_results <- downloadHandler(
            filename = "Analysis_Results.zip",
               content = function(file){
-                  temp_results <- merge_RLum(results)
+                  temp_results <- results
                   tmpdir <- tempdir()
                   fs <- vapply(names(temp_results), function(f){
                     fs <- paste0(tmpdir,"/",f,".csv")

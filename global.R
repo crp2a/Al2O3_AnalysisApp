@@ -26,7 +26,7 @@ file_data <- NULL
 file_info <- NULL
 file_structure <- NULL
 settings_signal_integral <- c(1,99)
-results <<- list()
+results <- list()
 temp_files <<- list()
 df <- NULL
 dosimeter_type <- c("field", "travel")

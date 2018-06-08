@@ -53,7 +53,12 @@ shinyUI(
           checkboxInput(
             "settings_cross_talk_correction",
             label = "Apply cross-talk correction",
-            value = TRUE)
+            value = TRUE),
+          checkboxInput(
+            "settings_travel_dosimeter",
+            label = "Apply travel dosimeter correction",
+            value = FALSE)
+
 
         ),
         div(
