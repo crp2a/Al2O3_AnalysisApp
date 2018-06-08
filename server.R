@@ -85,7 +85,7 @@ shinyServer(function(input, output, session) {
         FILENAME = file_info$name,
         WHEEL = as.character(file_info[["wheels"]]),
         POSITION = as.integer(file_info$position),
-        SAMPLE_ID = "unkown",
+        SAMPLE_ID = paste("Sample ", as.character(file_info$position)),
         TYPE = dosimeter_type[1],
         INCLUDE = TRUE,
         IMPORT_STATUS = "OK",
@@ -129,7 +129,6 @@ shinyServer(function(input, output, session) {
   ##=============================##
   observe({
     if(!is.null(input$sample_info)){
-
 
       ##create hash from row names
       hashA <- sum(as.numeric(row.names(sample_info_full$data[which(file_info[["wheels"]] == input$wheels), ])))
@@ -231,12 +230,12 @@ shinyServer(function(input, output, session) {
 
       ##create data.frame
       df <<- cbind(
-          sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(6,7)],
+          sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(7)],
           results@data$data[,c(1,2)])
 
       ##correct for the travel dosimeter
       if(!is.null(results@data[["data_TDcorrected"]])){
-        df[-travel_dosimeters,5:6] <<- round(results@data[["data_TDcorrected"]][,1:2],4)
+        df[-travel_dosimeters,7:8] <<- round(results@data[["data_TDcorrected"]][,1:2],4)
 
       }
 
@@ -262,7 +261,9 @@ shinyServer(function(input, output, session) {
                          document.body.removeChild(link);
                        }")))) %>%
             hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE) %>%
-            hot_heatmap(cols = 6)
+            hot_heatmap(cols = 7) %>%
+            hot_cols(columnSorting = TRUE) %>%
+            hot_col("INCLUDE", readOnly = FALSE)
 
 
         })

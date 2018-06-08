@@ -99,7 +99,7 @@ shinyUI(
           column(10, offset = 1,
               br(),
               br(),
-              rHandsontableOutput("analysis_results", height = 600, width = 800)
+              rHandsontableOutput("analysis_results", height = 600, width = 1000)
           )
          )
       )#mainPanel
