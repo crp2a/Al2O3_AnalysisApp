@@ -377,22 +377,22 @@ shinyServer(function(input, output, session) {
      )$dose.rate
 
      ##combine
-     results_final <- cbind(
-       df_grouped,
-       DOSE = df_grouped[["mean"]] * source_dose_rate[,1],
-       DOSE.ERROR = df_grouped[["sd.abs"]] * source_dose_rate[,1]
-     )
+    results_final <<- reactiveValues(data = cbind(
+         df_grouped,
+         DOSE = df_grouped[["mean"]] * source_dose_rate[,1],
+         DOSE.ERROR = df_grouped[["sd.abs"]] * source_dose_rate[,1]
+       ))
 
-     ##add columns of they do not yet exist
-     if(!("DURATION" %in% colnames(results_final))){
-       results_final <- cbind(
-         results_final,
-         DATE_IN = Sys.Date(),
-         DATE_OUT = Sys.Date(),
-         DURATION = 0
-         )
+       ##add columns of they do not yet exist
+       if(!("DURATION" %in% colnames(results_final$data))){
+         results_final$data <- cbind(
+           results_final$data,
+           DATE_IN = Sys.Date(),
+           DATE_OUT = Sys.Date(),
+           DURATION = 0
+           )
 
-     }
+       }
 
      ##create output plot
      ##boxplot
@@ -409,8 +409,8 @@ shinyServer(function(input, output, session) {
 
      ##create table output
      output$postprocessing_results <- renderRHandsontable({
-       colnames(results_final) <- toupper(colnames( results_final))
-       rhandsontable(data = results_final, readOnly = TRUE, selectCallback = TRUE,
+       colnames(results_final$data) <- toupper(colnames(results_final$data))
+       rhandsontable(data = results_final$data, readOnly = TRUE, selectCallback = TRUE,
        customOpts = list(
          csv = list(name = "Download to CSV",
                     callback = htmlwidgets::JS(
@@ -427,14 +427,24 @@ shinyServer(function(input, output, session) {
                          document.body.removeChild(link);
                        }")))) %>%
          hot_col("DATE_IN", readOnly = FALSE) %>%
+         hot_col("DATE_OUT", readOnly = FALSE) %>%
          hot_context_menu(
            allowRowEdit = FALSE,
            allowColEdit = FALSE) %>%
-         hot_table(allowRowEdit = FALSE) %>%
-         hot_col("DATE_OUT", readOnly = FALSE)
+         hot_table(allowRowEdit = FALSE)
 
 
      })
+
+     ##monitor table
+     #TODO
+     # observe({
+     #   if(!is.null(input$postprocessing_results)){
+     #     results_final$data <- hot_to_r(input$postprocessing_results)
+     #
+     #   }
+     #
+     # })
 
    })#observeEvent Post-processing
 
