@@ -31,6 +31,7 @@ shinyUI(
     ),##sidebarLayout
     icon = icon("import", lib = "glyphicon")
   ),##tabPanel - Data Import
+
   # PANEL - Analysis ------------------------------------------------------------------------------
   tabPanel("Analyse",
      ##=========================================SIDEBAR============================================##
@@ -92,7 +93,9 @@ shinyUI(
         fluidRow(
           column(10, offset = 1,
             h3(textOutput("analysis_error"), align = "center"),
-            plotOutput(outputId = "analysis_results.plot")
+            div(align = "center",
+              plotOutput(outputId = "analysis_results.plot")
+            )
           )
         ),
         fluidRow(
@@ -124,12 +127,14 @@ shinyUI(
            mainPanel(
              fluidRow(
                column(10, offset = 1,
-                      plotOutput(outputId = "postprocessing_boxplot", width = 600, height = 400)
+                 div(align = "center",
+                  plotOutput(outputId = "postprocessing_boxplot", width = 800, height = 400)
+                 )
                )
              ),
              fluidRow(
-               column(10, offset = 2,
-                      rHandsontableOutput("postprocessing_results", height = 600, width = 800)
+               column(10, offset = 1,
+                   rHandsontableOutput("postprocessing_results", height = 600, width = 800)
                )
              )
            )

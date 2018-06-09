@@ -95,7 +95,10 @@ shinyServer(function(input, output, session) {
     ##create sample_info output
     output$sample_info <- renderRHandsontable({
       rhandsontable(data = sample_info_full$data[which(file_info[["wheels"]] == "wheel1"), ]) %>%
-        hot_table(highlightCol = TRUE, highlightRow = TRUE)  %>%
+        hot_context_menu(
+          allowRowEdit = FALSE,
+          allowColEdit = FALSE) %>%
+        hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE)  %>%
         hot_col("FILENAME", readOnly = TRUE) %>%
         hot_col("WHEEL", readOnly = TRUE) %>%
         hot_col("POSITION", readOnly = TRUE) %>%
@@ -112,7 +115,10 @@ shinyServer(function(input, output, session) {
   observeEvent(input$wheels, {
   output$sample_info <- renderRHandsontable({
     rhandsontable(data = sample_info_full$data[which(file_info[["wheels"]] == input$wheels), ]) %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE)  %>%
+      hot_context_menu(
+        allowRowEdit = FALSE,
+        allowColEdit = FALSE) %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE)  %>%
       hot_col("FILENAME", readOnly = TRUE) %>%
       hot_col("WHEEL", readOnly = TRUE) %>%
       hot_col("POSITION", readOnly = TRUE) %>%
@@ -143,7 +149,7 @@ shinyServer(function(input, output, session) {
         plot_carousel(positions = as.numeric(file_info$position),
           included =  sample_info_full$data[["INCLUDE"]][which(file_info[["wheels"]] == input$wheels)],
           wheel = input$wheels
-          )}, height = 300, width = 300
+          )}, height = 300, width = 300, bg="transparent"
        )
       }
 
@@ -230,7 +236,8 @@ shinyServer(function(input, output, session) {
 
       ##create data.frame
       df <<- cbind(
-          sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(7)],
+          sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(6,7)],
+          REJECT = FALSE,
           results@data$data[,c(1,2)])
 
       ##correct for the travel dosimeter
@@ -239,9 +246,12 @@ shinyServer(function(input, output, session) {
 
       }
 
+      ##make df reactive
+      df_reactive <<- reactiveValues(data = df)
+
       ##render handsontable
       output$analysis_results <- renderRHandsontable({
-          rhandsontable(data = df, readOnly = TRUE, selectCallback = TRUE) %>%
+          rhandsontable(data = df_reactive$data, readOnly = TRUE, selectCallback = TRUE) %>%
             hot_context_menu(
               allowRowEdit = FALSE,
               allowColEdit = FALSE,
@@ -263,7 +273,7 @@ shinyServer(function(input, output, session) {
             hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE) %>%
             hot_heatmap(cols = 7) %>%
             hot_cols(columnSorting = TRUE) %>%
-            hot_col("INCLUDE", readOnly = FALSE)
+            hot_col("REJECT", readOnly = FALSE)
 
 
         })
@@ -315,6 +325,14 @@ shinyServer(function(input, output, session) {
 
    })#run analysis tab
 
+   #observe selection change in table
+   observe({
+    if(!is.null(input$analysis_results)){
+      df_reactive$data <<- hot_to_r(input$analysis_results)
+
+     }
+    })
+
    ##provide graphical output enviroment
    observeEvent(input$analysis_results_select, {
      output$analysis_results.plot <- renderImage({
@@ -332,7 +350,8 @@ shinyServer(function(input, output, session) {
    observeEvent(input$`Post-processing.run`,{
 
      ##group by sample ID
-     df_grouped <- dlply(df, .variables = "SAMPLE_ID", .fun = identity)
+     df_grouped <- dlply(
+       df_reactive$data[!df_reactive$data[["REJECT"]],], .variables = "SAMPLE_ID", .fun = identity)
 
      ##error weighted mean for each position
      df_combined <- t(vapply(1:length(df_grouped), function(x){
@@ -378,11 +397,13 @@ shinyServer(function(input, output, session) {
      ##create output plot
      ##boxplot
      output$postprocessing_boxplot <- renderPlot({
-     ggplot(data = df, aes(x = as.factor(SAMPLE_ID), y = DE * source_dose_rate[,1], col = SAMPLE_ID)) +
+     ggplot(data = df_reactive$data[!df_reactive$data[["REJECT"]],],
+            aes(x = as.factor(SAMPLE_ID), y = DE * source_dose_rate[,1], col = SAMPLE_ID)) +
        geom_boxplot() +
        xlab("Dosimeter ID") +
        ylab(expression(paste(D[e], " [µGy]"))) +
-       ggtitle("Totally Absorbed Dose")
+       ggtitle("Totally Absorbed Dose") +
+       theme_gray(base_size = 14)
      }, width = 800)
 
 
@@ -406,6 +427,10 @@ shinyServer(function(input, output, session) {
                          document.body.removeChild(link);
                        }")))) %>%
          hot_col("DATE_IN", readOnly = FALSE) %>%
+         hot_context_menu(
+           allowRowEdit = FALSE,
+           allowColEdit = FALSE) %>%
+         hot_table(allowRowEdit = FALSE) %>%
          hot_col("DATE_OUT", readOnly = FALSE)
 
 
