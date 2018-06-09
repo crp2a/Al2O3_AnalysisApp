@@ -6,6 +6,7 @@
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ##load needed packages
+rm(list = ls())
 require(shiny)
 require(shinyjs)
 require(Luminescence)
@@ -30,6 +31,7 @@ settings_signal_integral <- c(1,99)
 results <- list()
 temp_files <<- list()
 df <- NULL
+df_reactive <- NULL
 dosimeter_type <- c("field", "travel")
 
 # Carousel plot -------------------------------------------------------------------------------

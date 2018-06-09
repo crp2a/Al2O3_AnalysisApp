@@ -39,7 +39,12 @@ shinyUI(
       sidebarPanel(
         h5("Used calibration dataset"),
         wellPanel(
-          p(basename(calibration_data), align = "center")
+          p(basename(calibration_data), align = "center"),
+          wellPanel(
+            div(textOutput("sourceDR_FINAL"),
+              align = "center"
+            )
+          )
         ),
         h5("Settings"),
         wellPanel(
@@ -102,6 +107,7 @@ shinyUI(
           column(10, offset = 1,
               br(),
               br(),
+              textOutput("analysis_table_info_text"),
               rHandsontableOutput("analysis_results", height = 600, width = 1000)
           )
          )
@@ -116,24 +122,36 @@ shinyUI(
            ##=========================================SIDEBAR=====================================##
            sidebarLayout(
              sidebarPanel(
-               div(
-                 actionButton("Post-processing.run", icon("filter"),
-                              "Aggregate data ...", icon = NULL, width = NULL,
-                              style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
-                 align = "center"
+               fluidRow(
+                 column(12,
+                   div(
+                    actionButton("Post-processing.run", icon("filter"),
+                               "Aggregate data ...", icon = NULL, width = NULL,
+                               style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
+
+                 align = "center"),
+                 br(),
+                 div(
+                  uiOutput("post_processing_update"),
+                  align = "center"
+                 )
+                )
                )
              ),
            ##=========================================MAIN========================================##
            mainPanel(
              fluidRow(
                column(10, offset = 1,
+                 h3(textOutput("post_processing_error"), align = "center"),
                  div(align = "center",
-                  plotOutput(outputId = "postprocessing_boxplot", width = 800, height = 400)
+                  plotOutput(outputId = "postprocessing_boxplot", width = 800, height = 400),
+                  br()
                  )
                )
              ),
              fluidRow(
                column(10, offset = 1,
+                   textOutput("post_processing_table_info_text"),
                    rHandsontableOutput("postprocessing_results", height = 600, width = 800)
                )
              )
@@ -145,24 +163,24 @@ shinyUI(
   tabPanel("About",
     fluidRow(
       column(8, offset = 1,
-        h4("About this shiny app"),
+        h4("About this app"),
         p("This software was developed for the IRAMAT-CRP2A, Université Bordeaux Montaigne (France)
-          to analyse Al2O3:C chips measurements."),
-        p("App version: 0.1.0 [2018-06-07]"),
+          to analyse Al2O3:C chip measurements. For all calculations functions from the R package 'Luminescence' are used."),
+        p("App version: 0.1.0 [2018-06-09]"),
         p("Author: sebastian.kreutzer@u-bordeaux-montaigne.fr"),
-        h4("Relevant references"),
-        p("
-        Burow, C.,2018. calc_CosmicDoseRate(): Calculate the cosmic dose rate. Function version 0.5.2. In: Kreutzer, S.,
-        Burow, C., Dietze, M., Fuchs, M.C., Schmidt, C., Fischer, M., Friedrich, J., 2018. Luminescence:
-        Comprehensive Luminescence Dating Data Analysis. R package version 0.8.5. https://CRAN.R-project.org/package=Luminescence"),
+        br(),
+        h4("References to cite"),
 
-        p("Kreutzer, S., Burow, C., Dietze, M., Fuchs, Margret C., Schmidt, C., Fischer, M., Friedrich, J. 2018.
-        Luminescence: Comprehensive Luminescence Dating Data Analysis. R package version 0.8.5.
-        https://CRAN.R-project.org/package=Luminescence"),
+        p(paste0("Kreutzer, S., Burow, C., Dietze, M., Fuchs, Margret C., Schmidt, C., Fischer, M., Friedrich, J. ", strtrim(Sys.Date(), 4), ".
+        Luminescence: Comprehensive Luminescence Dating Data Analysis. R package version",packageDescription("Luminescence")$Version,".
+        https://CRAN.R-project.org/package=Luminescence")),
 
         p("Kreutzer S., Martin L., Guérin G., Tribolo C., Selva P., Mercier N., 2018.
         Environmental Dose Rate Determination Using a Passive Dosimeter: Techniques and Workflow for alpha-Al2O3:C Chips.
-        Geochronometria 45, 56-67. doi: 10.1515/geochr-2015-0086. doi: 10.1515/geochr-2015-0086.")
+        Geochronometria 45, 56-67. doi: 10.1515/geochr-2015-0086. doi: 10.1515/geochr-2015-0086."),
+
+        p("Kreutzer, S., Schmidt, C., Fuchs, M.C., Dietze, M., Fischer, M., Fuchs, M., 2012.
+          Introducing an R package for luminescence dating analysis. Ancient TL 30 (1), 1–8.")
       )
     ),icon = icon("info-sign", lib = "glyphicon")
   )#About

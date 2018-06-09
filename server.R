@@ -6,6 +6,13 @@
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyServer(function(input, output, session) {
 
+    ##pre-renderings
+    output$sourceDR_FINAL <- renderText({
+      paste(round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2),
+            sourceDR_FINAL[[3]]
+            )
+    })
+
     ##import data
     observeEvent(input$file_data, {
 
@@ -149,7 +156,7 @@ shinyServer(function(input, output, session) {
         plot_carousel(positions = as.numeric(file_info$position),
           included =  sample_info_full$data[["INCLUDE"]][which(file_info[["wheels"]] == input$wheels)],
           wheel = input$wheels
-          )}, height = 300, width = 300, bg="transparent"
+          )}, height = 320, width = 320, bg="transparent"
        )
       }
 
@@ -278,6 +285,9 @@ shinyServer(function(input, output, session) {
 
         })
 
+        ##add infotext
+        output$analysis_table_info_text <- renderText("Note: Dose values are here listed in seconds, not µGy!")
+
         ##show first graphic (otherwise it remains empty here, which is odd)
         output$analysis_results.plot <- renderImage({
           filename <- temp_files[[1]]
@@ -298,7 +308,7 @@ shinyServer(function(input, output, session) {
 
         ##download handler for results
         output$download_analysis_results <- downloadHandler(
-           filename = "Analysis_Results.zip",
+           filename = paste0(Sys.Date(),"_Al2O3_Analysis_Results.zip"),
               content = function(file){
                   temp_results <- results
                   tmpdir <- tempdir()
@@ -313,6 +323,21 @@ shinyServer(function(input, output, session) {
                     return(fs)
 
                   }, character(1))
+
+                  ##add HTML report
+                  fs <- c(fs, paste0(tmpdir,"/RLum_Report.html"), unlist(temp_files))
+                  report_RLum(
+                    results,
+                    title = "RLum-Results report Al2O3:C",
+                    file = paste0(tmpdir,"/RLum_Report"),
+                    launch.browser = FALSE,
+                    timestamp = FALSE,
+                    show_report = FALSE,
+                    quiet = TRUE,
+                    clean = TRUE
+                    )
+
+                  ##create ZIP-file
                   zip(zipfile = file, files = fs, flags = "-j")
                 },
                 contentType = "application/zip"
@@ -349,107 +374,174 @@ shinyServer(function(input, output, session) {
   # Post-processing -----------------------------------------------------------------------------
    observeEvent(input$`Post-processing.run`,{
 
-     ##group by sample ID
-     df_grouped <- dlply(
-       df_reactive$data[!df_reactive$data[["REJECT"]],], .variables = "SAMPLE_ID", .fun = identity)
+     ##add infotext
+     output$post_processing_table_info_text <- renderText("Note: Dose values are listed in µGy, durations are expressed in days and dose rates in µGy/a")
 
-     ##error weighted mean for each position
-     df_combined <- t(vapply(1:length(df_grouped), function(x){
-       unlist(calc_Statistics(
-         df_grouped[[x]][,c("DE","DE_ERROR")], n.MCM = 1000)[["MCM"]][c("mean", "sd.abs")])
-     }, FUN.VALUE = numeric(length = 2)))
+     #preset error message
+     outputpost_processing_error <- renderText(NULL)
 
-     ##add sample ID
-     df_grouped <-
-       data.frame(ID = attributes(df_grouped)$names,
-                  N = vapply(df_grouped, nrow, integer(1)),
-                  df_combined,
-                  stringsAsFactors = FALSE)
+     if(!is.null(df_reactive$data)){
 
-     ##calculate relative error
-     df_grouped <- cbind(df_grouped, sd.rel = df_grouped[[3]]/df_grouped[[2]])
+       ##group by sample ID
+       df_grouped <- dlply(
+         df_reactive$data[!df_reactive$data[["REJECT"]],], .variables = "SAMPLE_ID", .fun = identity)
 
-     # ##translate to µGy
-     source_dose_rate <- calc_SourceDoseRate(
-       measurement.date = as.Date(strtrim(file_info$startDate[1],8), format = "%Y%m%d"),
-       calib.date = as.Date(sourceDR_FINAL$CAL_DATE),
-       calib.dose.rate = c(sourceDR_FINAL$DR),
-       calib.error = c(sourceDR_FINAL$DR_ERROR)
-     )$dose.rate
+       ##error weighted mean for each position
+       df_combined <- t(vapply(1:length(df_grouped), function(x){
+         unlist(calc_Statistics(
+           df_grouped[[x]][,c("DE","DE_ERROR")], n.MCM = 1000)[["MCM"]][c("mean", "sd.abs")])
+       }, FUN.VALUE = numeric(length = 2)))
 
-     ##combine
-    results_final <<- reactiveValues(data = cbind(
-         df_grouped,
-         DOSE = df_grouped[["mean"]] * source_dose_rate[,1],
-         DOSE.ERROR = df_grouped[["sd.abs"]] * source_dose_rate[,1]
-       ))
+       ##add sample ID
+       df_grouped <-
+         data.frame(ID = attributes(df_grouped)$names,
+                    N = vapply(df_grouped, nrow, integer(1)),
+                    df_combined,
+                    stringsAsFactors = FALSE)
 
-       ##add columns of they do not yet exist
-       if(!("DURATION" %in% colnames(results_final$data))){
-         results_final$data <- cbind(
-           results_final$data,
-           DATE_IN = Sys.Date(),
-           DATE_OUT = Sys.Date(),
-           DURATION = 0
-           )
+       ##calculate relative error
+       df_grouped <- cbind(df_grouped, sd.rel = df_grouped[[3]]/df_grouped[[2]])
 
-       }
+       # ##translate to µGy
+       source_dose_rate <- calc_SourceDoseRate(
+         measurement.date = as.Date(strtrim(file_info$startDate[1],8), format = "%Y%m%d"),
+         calib.date = as.Date(sourceDR_FINAL$CAL_DATE),
+         calib.dose.rate = c(sourceDR_FINAL$DR),
+         calib.error = c(sourceDR_FINAL$DR_ERROR)
+       )$dose.rate
 
-     ##create output plot
-     ##boxplot
-     output$postprocessing_boxplot <- renderPlot({
-     ggplot(data = df_reactive$data[!df_reactive$data[["REJECT"]],],
-            aes(x = as.factor(SAMPLE_ID), y = DE * source_dose_rate[,1], col = SAMPLE_ID)) +
-       geom_boxplot() +
-       xlab("Dosimeter ID") +
-       ylab(expression(paste(D[e], " [µGy]"))) +
-       ggtitle("Totally Absorbed Dose") +
-       theme_gray(base_size = 14)
-     }, width = 800)
+       ##combine
+      results_final <<- reactiveValues(data = cbind(
+           df_grouped,
+           DOSE = df_grouped[["mean"]] * source_dose_rate[,1],
+           DOSE.ERROR = df_grouped[["sd.abs"]] * source_dose_rate[,1]
+         ))
 
+         ##add columns of they do not yet exist
+         if(!("DURATION" %in% colnames(results_final$data))){
+           results_final$data <- cbind(
+             results_final$data,
+             DATE_IN = Sys.Date(),
+             DATE_OUT = Sys.Date(),
+             DURATION = NA_integer_,
+             DR = NA_real_,
+             DR.ERROR = NA_real_
+             )
+
+         }
+
+        ##add new ui to add a new 'update' button
+        output$post_processing_update <- renderUI({
+          actionButton(
+            inputId = "post_processing_update",
+            label = "Update table",
+            icon("refresh", lib = "glyphicon")
+            )
+
+        })
+
+       ##create output plot
+       ##boxplot
+       output$postprocessing_boxplot <- renderPlot({
+       ggplot(data = df_reactive$data[!df_reactive$data[["REJECT"]],],
+              aes(x = as.factor(SAMPLE_ID), y = DE * source_dose_rate[,1], col = SAMPLE_ID)) +
+         geom_boxplot() +
+         xlab("Dosimeter ID") +
+         ylab(expression(paste(D[e], " [µGy]"))) +
+         ggtitle("Totally Absorbed Dose") +
+         theme_gray(base_size = 14)
+       }, width = 800)
+
+
+       ##create table output
+       output$postprocessing_results <- renderRHandsontable({
+         colnames(results_final$data) <- toupper(colnames(results_final$data))
+         rownames(results_final$data) <- 1:nrow(results_final$data)
+         rhandsontable(data = results_final$data, readOnly = TRUE, selectCallback = TRUE,
+         customOpts = list(
+           csv = list(name = "Download to CSV",
+                      callback = htmlwidgets::JS(
+                        "function (key, options) {
+                           var csv = csvString(this, sep=',', dec='.');
+
+                           var link = document.createElement('a');
+                           link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
+                             encodeURIComponent(csv));
+                           link.setAttribute('download', 'data.csv');
+
+                           document.body.appendChild(link);
+                           link.click();
+                           document.body.removeChild(link);
+                         }")))) %>%
+           hot_col("DATE_IN", readOnly = FALSE) %>%
+           hot_col("DATE_OUT", readOnly = FALSE) %>%
+           hot_context_menu(
+             allowRowEdit = FALSE,
+             allowColEdit = FALSE) %>%
+           hot_table(allowRowEdit = FALSE) %>%
+           hot_heatmap(cols = 11) %>%
+           hot_cols(columnSorting = TRUE)
+
+       })
+
+     }else{
+       output$post_processing_error <- renderText("Error: No data to aggregate!")
+
+     }
+
+   })#observeEvent Post-processing
+
+   ##monitor post-processing table
+   observe({
+     if(!is.null(input$postprocessing_results)){
+       results_final$data <- hot_to_r(input$postprocessing_results)
+
+     }
+
+   })
+
+   ##update post-processing table
+   observeEvent(input$post_processing_update, {
+
+     ##update DURATION
+     results_final$data[["DURATION"]] <-  as.integer(
+       results_final$data[["DATE_OUT"]] - results_final$data[["DATE_IN"]])
+
+     ##update DR and DR.ERROR
+     results_final$data[["DR"]] <- results_final$data[["DOSE"]] * 365.25 / results_final$data[["DURATION"]]
+     results_final$data[["DR.ERROR"]] <- ((results_final$data[["DOSE"]] * 365.25) / as.numeric(results_final$data[["DURATION"]])) *
+        results_final$data[["DOSE.ERROR"]] /  results_final$data[["DOSE"]]
 
      ##create table output
      output$postprocessing_results <- renderRHandsontable({
-       colnames(results_final$data) <- toupper(colnames(results_final$data))
        rhandsontable(data = results_final$data, readOnly = TRUE, selectCallback = TRUE,
-       customOpts = list(
-         csv = list(name = "Download to CSV",
-                    callback = htmlwidgets::JS(
-                      "function (key, options) {
-                         var csv = csvString(this, sep=',', dec='.');
+                     customOpts = list(
+                       csv = list(name = "Download to CSV",
+                                  callback = htmlwidgets::JS(
+                                    "function (key, options) {
+                           var csv = csvString(this, sep=',', dec='.');
 
-                         var link = document.createElement('a');
-                         link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
-                           encodeURIComponent(csv));
-                         link.setAttribute('download', 'data.csv');
+                           var link = document.createElement('a');
+                           link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
+                             encodeURIComponent(csv));
+                           link.setAttribute('download', 'data.csv');
 
-                         document.body.appendChild(link);
-                         link.click();
-                         document.body.removeChild(link);
-                       }")))) %>%
+                           document.body.appendChild(link);
+                           link.click();
+                           document.body.removeChild(link);
+                         }")))) %>%
          hot_col("DATE_IN", readOnly = FALSE) %>%
          hot_col("DATE_OUT", readOnly = FALSE) %>%
          hot_context_menu(
            allowRowEdit = FALSE,
            allowColEdit = FALSE) %>%
-         hot_table(allowRowEdit = FALSE)
+         hot_table(allowRowEdit = FALSE) %>%
+         hot_heatmap(cols = 11) %>%
+         hot_cols(columnSorting = TRUE)
 
+    })
 
-     })
+   })
 
-     ##monitor table
-     #TODO
-     # observe({
-     #   if(!is.null(input$postprocessing_results)){
-     #     results_final$data <- hot_to_r(input$postprocessing_results)
-     #
-     #   }
-     #
-     # })
-
-   })#observeEvent Post-processing
-
-
- }
-)
+})#last brackets
 
