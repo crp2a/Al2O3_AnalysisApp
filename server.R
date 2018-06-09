@@ -394,7 +394,7 @@ shinyServer(function(input, output, session) {
 
        ##add sample ID
        df_grouped <-
-         data.frame(ID = attributes(df_grouped)$names,
+         data.frame(SAMPLE_ID = attributes(df_grouped)$names,
                     N = vapply(df_grouped, nrow, integer(1)),
                     df_combined,
                     stringsAsFactors = FALSE)

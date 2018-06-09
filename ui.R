@@ -21,7 +21,7 @@ shinyUI(
           )
         )
 
-    , width = 4),
+    , width = 3),
       mainPanel(
         ##create all the needed tabs
         uiOutput("tabs"),
@@ -64,8 +64,6 @@ shinyUI(
             "settings_travel_dosimeter",
             label = "Apply travel dosimeter correction",
             value = FALSE)
-
-
         ),
         div(
           actionButton("Analysis.run", icon("play-circle"),
@@ -92,7 +90,7 @@ shinyUI(
           align = "center"
         )
 
-      ),
+      ,width = 3),
       ##=========================================MAIN==============================================##
       mainPanel(
         fluidRow(
@@ -137,23 +135,24 @@ shinyUI(
                  )
                 )
                )
-             ),
+             , width = 3),
            ##=========================================MAIN========================================##
            mainPanel(
              fluidRow(
                column(10, offset = 1,
                  h3(textOutput("post_processing_error"), align = "center"),
                  div(align = "center",
-                  plotOutput(outputId = "postprocessing_boxplot", width = 800, height = 400),
-                  br()
+                   plotOutput(outputId = "postprocessing_boxplot", width = 1000, height = 400)
                  )
                )
              ),
              fluidRow(
                column(10, offset = 1,
+                    br(),
+                    br(),
                    textOutput("post_processing_table_info_text"),
-                   rHandsontableOutput("postprocessing_results", height = 600, width = 800)
-               )
+                   rHandsontableOutput("postprocessing_results", height = 600, width = 1000)
+              )
              )
            )
           )
