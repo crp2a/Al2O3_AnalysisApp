@@ -31,3 +31,6 @@ Data/*
 
 # Exclude github readme
 README.html
+
+# Exclude other stuff
+internals/*
