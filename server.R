@@ -7,11 +7,18 @@
 shinyServer(function(input, output, session) {
 
     ##pre-renderings
-    output$sourceDR_FINAL <- renderText({
-      paste(round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2),
-            sourceDR_FINAL[[3]]
-            )
-    })
+    if(!is.null(sourceDR_FINAL)){
+      output$sourceDR_FINAL <- renderText({
+        paste(round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2),
+              sourceDR_FINAL[[3]]
+        )
+      })
+
+    }else{
+      output$sourceDR_FINAL <- renderText({"NA ± NA"})
+
+    }
+
 
     ##import data
     observeEvent(input$file_data, {
@@ -404,12 +411,18 @@ shinyServer(function(input, output, session) {
        df_grouped <- cbind(df_grouped, sd.rel = df_grouped[[3]]/df_grouped[[2]])
 
        # ##translate to µGy
-       source_dose_rate <- calc_SourceDoseRate(
-         measurement.date = as.Date(strtrim(file_info$startDate[1],8), format = "%Y%m%d"),
-         calib.date = as.Date(sourceDR_FINAL$CAL_DATE),
-         calib.dose.rate = c(sourceDR_FINAL$DR),
-         calib.error = c(sourceDR_FINAL$DR_ERROR)
-       )$dose.rate
+       if(!is.null(sourceDR_FINAL)){
+         source_dose_rate <- calc_SourceDoseRate(
+           measurement.date = as.Date(strtrim(file_info$startDate[1],8), format = "%Y%m%d"),
+           calib.date = as.Date(sourceDR_FINAL$CAL_DATE),
+           calib.dose.rate = c(sourceDR_FINAL$DR),
+           calib.error = c(sourceDR_FINAL$DR_ERROR)
+         )$dose.rate
+
+       }else{
+         source_dose_rate <- data.frame(x = 1, y = 0)
+
+       }
 
        ##combine
       results_final <<- reactiveValues(data = cbind(

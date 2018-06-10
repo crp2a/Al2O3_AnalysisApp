@@ -22,7 +22,18 @@ enableBookmarking(store = "server")
 
 ##load calibration data
 calibration_data <- list.files(path = "calibration_data/", full.names = TRUE)
-load(file = calibration_data)
+
+  ##make sure nothing breaks here if no file is available
+  if(length(calibration_data) == 0){
+    results_CT <- NULL
+    results_ITC <- NULL
+    sourceDR_FINAL <- NULL
+    calibration_data <- "not available"
+
+  }else{
+    load(file = calibration_data)
+
+  }
 
 ##initialise data
 file_data <- NULL
