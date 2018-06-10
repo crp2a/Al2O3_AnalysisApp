@@ -374,13 +374,14 @@ shinyServer(function(input, output, session) {
   # Post-processing -----------------------------------------------------------------------------
    observeEvent(input$`Post-processing.run`,{
 
-     ##add infotext
-     output$post_processing_table_info_text <- renderText("Note: Dose values are listed in µGy, durations are expressed in days and dose rates in µGy/a")
-
      #preset error message
      outputpost_processing_error <- renderText(NULL)
 
      if(!is.null(df_reactive$data)){
+
+       ##add infotext
+       output$post_processing_table_info_text <- renderText(
+         "Note: Dose values are listed in µGy, durations are expressed in days and dose rates in µGy/a")
 
        ##group by sample ID
        df_grouped <- dlply(
