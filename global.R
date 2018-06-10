@@ -14,6 +14,7 @@ require(shape)
 require(rhandsontable)
 require(plyr)
 require(ggplot2)
+require(knitr)
 
 ##Shiny settings
 options(shiny.maxRequestSize=30*1024^2)
