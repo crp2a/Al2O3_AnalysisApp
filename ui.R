@@ -8,7 +8,7 @@ shinyUI(
  navbarPage(
    title = HTML(paste0("Al<sub>2</sub>O<sub>3</sub>:C Analysis App")),
    windowTitle = "Al2O3:C Analysis App",
-   footer = HTML("<small>This software comes WITHOUT ANY WARRANTY.</small>"),
+   footer = HTML("<hr><div align = 'center'><small>This software comes WITHOUT ANY WARRANTY.</small></div>"),
 
 
   # PANEL - Import ------------------------------------------------------------------------------
