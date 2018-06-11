@@ -469,7 +469,7 @@ shinyServer(function(input, output, session) {
        ggplot(data = df_reactive$data[!df_reactive$data[["REJECT"]],],
               aes(x = as.factor(SAMPLE_ID), y = DE * source_dose_rate[,1], col = SAMPLE_ID)) +
          geom_boxplot() +
-         xlab("Dosimeter ID") +
+         xlab("SAMPLE ID") +
          ylab(expression(paste(D[e], " [µGy]"))) +
          ggtitle("Totally Absorbed Dose") +
          theme_gray(base_size = 14)
