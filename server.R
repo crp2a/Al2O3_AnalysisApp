@@ -568,10 +568,13 @@ shinyServer(function(input, output, session) {
 
 
   # Static pages --------------------------------------------------------------------------------
-  output$about<- renderUI({
+  output$about <- renderUI({
      HTML(markdown::markdownToHTML(knit('static/about.Rmd', quiet = TRUE, output = tempfile()), fragment.only = TRUE))
    })
 
+   output$news <- renderUI({
+     HTML(markdown::markdownToHTML(knit('static/news.Rmd', quiet = TRUE, output = tempfile()), fragment.only = TRUE))
+   })
 
 })#last brackets
 

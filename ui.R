@@ -5,7 +5,10 @@
 ## Initial:    2018-06-10
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyUI(
- navbarPage(HTML(paste0("Al<sub>2</sub>O<sub>3</sub>:C Analysis App")),
+ navbarPage(
+   title = HTML(paste0("Al<sub>2</sub>O<sub>3</sub>:C Analysis App")),
+   windowTitle = "Al2O3:C Analysis App",
+
 
   # PANEL - Import ------------------------------------------------------------------------------
   tabPanel(title = "Import",
@@ -165,7 +168,15 @@ shinyUI(
         uiOutput('about')
       )
     ),icon = icon("info-sign", lib = "glyphicon")
-  )#About
+  ),#About
+  # PANEL - News ------------------------------------------------------------------------------
+  tabPanel("News",
+           fluidRow(
+             column(10, offset = 1,
+                    uiOutput('news')
+             )
+           ),icon = icon("list-alt", lib = "glyphicon")
+  )#news
  )##navbarPage
 )##ShinyUI
 
