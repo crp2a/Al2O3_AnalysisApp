@@ -2,7 +2,7 @@
 ## Title:   Al2O3:C Analysis App
 ## Authors: Sebastian Kreutzer, IRAMAT-CRP2A, Université Bordeaux Montaigne (France)
 ## Contact: sebastian.kreutzer@u-bordeaux-montainge.fr
-## Initial:    2018-06-10
+## Initial: 2018-06-10
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyServer(function(input, output, session) {
 
@@ -220,7 +220,8 @@ shinyServer(function(input, output, session) {
                 object = file_data[[i]],
                 signal_integral = input$settings_signal_integral,
                 plot = TRUE,
-                verbose = FALSE)
+                verbose = FALSE
+                )
             dev.off()
           }
 
@@ -396,9 +397,17 @@ shinyServer(function(input, output, session) {
 
        ##error weighted mean for each position
        df_combined <- t(vapply(1:length(df_grouped), function(x){
+         if(any(is.na(df_grouped[[x]][,c("DE","DE_ERROR")]))){
+           c(NA_real_,NA_real_)
+
+         }else{
          unlist(calc_Statistics(
            df_grouped[[x]][,c("DE","DE_ERROR")], n.MCM = 1000)[["MCM"]][c("mean", "sd.abs")])
+        }
        }, FUN.VALUE = numeric(length = 2)))
+
+       ##reset column names
+       colnames(df_combined) <- c("MEAN", "SD")
 
        ##add sample ID
        df_grouped <-
@@ -408,7 +417,7 @@ shinyServer(function(input, output, session) {
                     stringsAsFactors = FALSE)
 
        ##calculate relative error
-       df_grouped <- cbind(df_grouped, sd.rel = df_grouped[[3]]/df_grouped[[2]])
+       df_grouped <- cbind(df_grouped, CV = df_grouped[[3]]/df_grouped[[2]])
 
        # ##translate to µGy
        if(!is.null(sourceDR_FINAL)){
@@ -427,8 +436,8 @@ shinyServer(function(input, output, session) {
        ##combine
       results_final <<- reactiveValues(data = cbind(
            df_grouped,
-           DOSE = df_grouped[["mean"]] * source_dose_rate[,1],
-           DOSE.ERROR = df_grouped[["sd.abs"]] * source_dose_rate[,1]
+           DOSE = df_grouped[["MEAN"]] * source_dose_rate[,1],
+           DOSE.ERROR = df_grouped[["SD"]] * source_dose_rate[,1]
          ))
 
          ##add columns of they do not yet exist
@@ -560,7 +569,7 @@ shinyServer(function(input, output, session) {
 
   # Static pages --------------------------------------------------------------------------------
   output$about<- renderUI({
-     HTML(markdown::markdownToHTML(knit('static/about.Rmd', quiet = TRUE), fragment.only = TRUE))
+     HTML(markdown::markdownToHTML(knit('static/about.Rmd', quiet = TRUE, output = tempfile()), fragment.only = TRUE))
    })
 
 
