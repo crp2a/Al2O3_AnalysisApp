@@ -407,7 +407,7 @@ shinyServer(function(input, output, session) {
      if(!is.null(df_reactive$data)){
 
        ##add infotext
-       output$post_processing_table_info_text <- renderText("Sample summary")
+       output$post_processing_table_info_text <- renderText("Sample summary | Source dose rate re-calculated to measurement date.")
 
        ##group by sample ID
        df_grouped <- dlply(
