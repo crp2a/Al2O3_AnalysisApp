@@ -74,7 +74,7 @@ shinyUI(
         ),
         div(
           actionButton("Analysis.run", icon("play-circle"),
-                       "Run analysis ...", icon = NULL, width = NULL,
+                       "(Re) Run analysis ...", icon = NULL, width = NULL,
                        style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
           align = "center"
         ),

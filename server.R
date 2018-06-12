@@ -307,7 +307,7 @@ shinyServer(function(input, output, session) {
         })
 
         ##add infotext
-        output$analysis_table_info_text <- renderText("Note: Dose values are here listed in seconds, not µGy!")
+        output$analysis_table_info_text <- renderText("Note: Dose values are here listed in seconds, not µGy! To reject data permanently, go back to the 'Import' panel")
 
         ##show first graphic (otherwise it remains empty here, which is odd)
         output$analysis_results.plot <- renderImage({
