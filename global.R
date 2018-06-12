@@ -34,7 +34,6 @@ calibration_data <- sort(list.files(path = "calibration_data/", full.names = TRU
 
   }
 
-
 ##initialise data
 file_data <- NULL
 file_info <- NULL

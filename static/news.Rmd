@@ -1,5 +1,12 @@
 ## News and changes
 
+
+### Version 0.1.1
+
+* Panel 'Analyse': Add option for multiple calibrations datasets
+* Panel 'Analyse': The plots shown for a selected row are no correct even if the datasets was resorted or the panel was switched.
+* Panel 'Post-processing': Add source dose rate values and units to final output table
+
 ### Version 0.1.0
 
 * Initial version 

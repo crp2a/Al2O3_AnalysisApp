@@ -6,25 +6,6 @@
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyServer(function(input, output, session) {
 
-    # Calibration datasets ------------------------------------------------------------------------
-    observeEvent(input$calibration_data,{
-      load(calibration_data[[grep(pattern = input$calibration_data, x = calibration_data, fixed = TRUE)]], envir = .GlobalEnv)
-
-      ##pre-renderings
-      if(!is.null(sourceDR_FINAL)){
-        output$sourceDR_FINAL <- renderText({
-          paste(round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2),
-                sourceDR_FINAL[[3]]
-          )
-        })
-
-      }else{
-        output$sourceDR_FINAL <- renderText({"NA ± NA"})
-
-      }
-
-    })
-
 
     ##import data
     observeEvent(input$file_data, {
@@ -71,7 +52,7 @@ shinyServer(function(input, output, session) {
 
 
 
-# TAB 1 ---------------------------------------------------------------------------------------
+# PANEL IMPORT------------------------------------------------------------------------------------
 
   ##=============================##
   ##initial event of loading data
@@ -188,6 +169,31 @@ shinyServer(function(input, output, session) {
 
 
   # PANEL Analysis ------------------------------------------------------------------------------
+
+  ##=============================##
+  ##Calibration dataset selection
+  ##=============================##
+  observeEvent(input$calibration_data,{
+    ##load calibration dataset
+    load(calibration_data[[grep(pattern = input$calibration_data,
+                                x = calibration_data,
+                                fixed = TRUE)]], envir = .GlobalEnv)
+
+    ##show applied dose rate
+    if(!is.null(sourceDR_FINAL)){
+      output$sourceDR_FINAL <- renderText({
+        paste(round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2),
+              sourceDR_FINAL[[3]]
+        )
+      })
+
+    }else{
+      output$sourceDR_FINAL <- renderText({"NA ± NA"})
+
+    }
+
+  })
+
   ##=============================##
   ##run analysis
   ##=============================##
@@ -257,13 +263,14 @@ shinyServer(function(input, output, session) {
 
       ##create data.frame
       df <<- cbind(
+          ALQ = 1:length(sample_info_full$data[sample_info_full$data[["INCLUDE"]],1]),
           sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(6,7)],
           REJECT = FALSE,
           results@data$data[,c(1,2)])
 
       ##correct for the travel dosimeter
       if(!is.null(results@data[["data_TDcorrected"]])){
-        df[-travel_dosimeters,7:8] <<- round(results@data[["data_TDcorrected"]][,1:2],4)
+        df[-travel_dosimeters,8:9] <<- round(results@data[["data_TDcorrected"]][,1:2],4)
 
       }
 
@@ -292,7 +299,7 @@ shinyServer(function(input, output, session) {
                          document.body.removeChild(link);
                        }")))) %>%
             hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE) %>%
-            hot_heatmap(cols = 7) %>%
+            hot_heatmap(cols = 8) %>%
             hot_cols(columnSorting = TRUE) %>%
             hot_col("REJECT", readOnly = FALSE)
 
@@ -372,20 +379,26 @@ shinyServer(function(input, output, session) {
      }
     })
 
-   ##provide graphical output enviroment
+   ##provide graphical output environment for plot output
    observeEvent(input$analysis_results_select, {
      output$analysis_results.plot <- renderImage({
-       filename <- temp_files[[input$analysis_results_select$select$r]]
+
+       ##grep correct aliquot
+       temp_aliquot <- paste0("ALQ_",df[["ALQ"]][input$analysis_results_select$select$r],".png")
+
+       ##set filename
+       filename <- temp_files[[grep(pattern = temp_aliquot, x = temp_files,fixed = TRUE)]]
 
         #Return a list containing the filename and alt text
         list(src = filename,
-             alt = paste("Image number", input$analysis_results_select$select$r))
+             alt = paste("Image number", temp_aliquot))
+
     }, deleteFile = FALSE)
 
    })
 
 
-  # Post-processing -----------------------------------------------------------------------------
+  # PANEL Post-processing -------------------------------------------------------------------------
    observeEvent(input$`Post-processing.run`,{
 
      #preset error message
@@ -394,8 +407,7 @@ shinyServer(function(input, output, session) {
      if(!is.null(df_reactive$data)){
 
        ##add infotext
-       output$post_processing_table_info_text <- renderText(
-         "Note: Dose values are listed in µGy, durations are expressed in days and dose rates in µGy/a")
+       output$post_processing_table_info_text <- renderText("Sample summary")
 
        ##group by sample ID
        df_grouped <- dlply(
@@ -442,6 +454,8 @@ shinyServer(function(input, output, session) {
        ##combine
       results_final <<- reactiveValues(data = cbind(
            df_grouped,
+           SOURCE_DR = source_dose_rate[[1]],
+           SOURCE_DR.ERROR = source_dose_rate[[2]],
            DOSE = df_grouped[["MEAN"]] * source_dose_rate[,1],
            DOSE.ERROR = df_grouped[["SD"]] * source_dose_rate[,1]
          ))
@@ -458,6 +472,13 @@ shinyServer(function(input, output, session) {
              )
 
          }
+
+        ##make sure that the sample headers are ok
+        colnames(results_final$data) <- c(
+          "SAMPLE_ID", "N", "SAMPLE MEAN \n [s]", "SAMPLE SD \n [s]", "CV \n [%]", "SOURCE_DR \n [µGy/s]",
+          "SOURCE_DR.ERROR \n [µGy/s]", "DOSE \n [µGy]", "DOSE.ERROR \n [µGy]", "DATE_IN", "DATE_OUT",
+          "DURATION \n [days]", "FINAL DR \n [µGy/a]", "FINAL DR.ERROR \n [µGy/a]"
+          )
 
         ##add new ui to add a new 'update' button
         output$post_processing_update <- renderUI({
@@ -484,7 +505,6 @@ shinyServer(function(input, output, session) {
 
        ##create table output
        output$postprocessing_results <- renderRHandsontable({
-         colnames(results_final$data) <- toupper(colnames(results_final$data))
          rownames(results_final$data) <- 1:nrow(results_final$data)
          rhandsontable(data = results_final$data, readOnly = TRUE, selectCallback = TRUE,
          customOpts = list(
@@ -508,7 +528,7 @@ shinyServer(function(input, output, session) {
              allowRowEdit = FALSE,
              allowColEdit = FALSE) %>%
            hot_table(allowRowEdit = FALSE) %>%
-           hot_heatmap(cols = 11) %>%
+           hot_heatmap(cols = 13) %>%
            hot_cols(columnSorting = TRUE)
 
        })
@@ -533,13 +553,14 @@ shinyServer(function(input, output, session) {
    observeEvent(input$post_processing_update, {
 
      ##update DURATION
-     results_final$data[["DURATION"]] <-  as.integer(
+     results_final$data[["DURATION \n [days]"]] <-  as.integer(
        results_final$data[["DATE_OUT"]] - results_final$data[["DATE_IN"]])
 
      ##update DR and DR.ERROR
-     results_final$data[["DR"]] <- results_final$data[["DOSE"]] * 365.25 / results_final$data[["DURATION"]]
-     results_final$data[["DR.ERROR"]] <- ((results_final$data[["DOSE"]] * 365.25) / as.numeric(results_final$data[["DURATION"]])) *
-        results_final$data[["DOSE.ERROR"]] /  results_final$data[["DOSE"]]
+     results_final$data[["FINAL DR \n [µGy/a]"]] <- results_final$data[["DOSE \n [µGy]"]] * 365.25 / results_final$data[["DURATION \n [days]"]]
+     results_final$data[["FINAL DR.ERROR \n [µGy/a]" ]] <- ((results_final$data[["DOSE \n [µGy]"]] * 365.25) /
+                                                              as.numeric(results_final$data[["DURATION \n [days]"]])) *
+        results_final$data[["DOSE.ERROR \n [µGy]"]] /  results_final$data[["DOSE \n [µGy]"]]
 
      ##create table output
      output$postprocessing_results <- renderRHandsontable({
@@ -565,7 +586,7 @@ shinyServer(function(input, output, session) {
            allowRowEdit = FALSE,
            allowColEdit = FALSE) %>%
          hot_table(allowRowEdit = FALSE) %>%
-         hot_heatmap(cols = 11) %>%
+         hot_heatmap(cols = 13) %>%
          hot_cols(columnSorting = TRUE)
 
     })
