@@ -300,7 +300,7 @@ shinyServer(function(input, output, session) {
                        }")))) %>%
             hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE) %>%
             hot_heatmap(cols = 8) %>%
-            hot_cols(columnSorting = TRUE) %>%
+            hot_cols(columnSorting = FALSE) %>%
             hot_col("REJECT", readOnly = FALSE)
 
 

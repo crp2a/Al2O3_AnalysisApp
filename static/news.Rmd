@@ -4,7 +4,8 @@
 ### Version 0.1.1
 
 * Panel 'Analyse': Add option for multiple calibrations datasets
-* Panel 'Analyse': The plots shown for a selected row are no correct even if the datasets was resorted or the panel was switched.
+* Panel 'Analyse': The plots shown for a selected row are no correct even if the datasets was resorted or the panel was switched; however for this the column 
+sorting was disabled until the underlying widget supports the option to be needed to enable this feature again
 * Panel 'Post-processing': Add source dose rate values and units to final output table
 
 ### Version 0.1.0
