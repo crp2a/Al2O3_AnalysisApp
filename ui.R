@@ -43,7 +43,10 @@ shinyUI(
       sidebarPanel(
         h5("Used calibration dataset"),
         wellPanel(
-          p(basename(calibration_data), align = "center"),
+          selectInput(
+            inputId = "calibration_data",
+            label = "Available calibration datasets",
+            choices = basename(calibration_data)),
           wellPanel(
             div(textOutput("sourceDR_FINAL"),
               align = "center"

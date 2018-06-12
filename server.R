@@ -6,18 +6,24 @@
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyServer(function(input, output, session) {
 
-    ##pre-renderings
-    if(!is.null(sourceDR_FINAL)){
-      output$sourceDR_FINAL <- renderText({
-        paste(round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2),
-              sourceDR_FINAL[[3]]
-        )
-      })
+    # Calibration datasets ------------------------------------------------------------------------
+    observeEvent(input$calibration_data,{
+      load(calibration_data[[grep(pattern = input$calibration_data, x = calibration_data, fixed = TRUE)]], envir = .GlobalEnv)
 
-    }else{
-      output$sourceDR_FINAL <- renderText({"NA ± NA"})
+      ##pre-renderings
+      if(!is.null(sourceDR_FINAL)){
+        output$sourceDR_FINAL <- renderText({
+          paste(round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2),
+                sourceDR_FINAL[[3]]
+          )
+        })
 
-    }
+      }else{
+        output$sourceDR_FINAL <- renderText({"NA ± NA"})
+
+      }
+
+    })
 
 
     ##import data

@@ -21,8 +21,10 @@ options(shiny.maxRequestSize=30*1024^2)
 enableBookmarking(store = "server")
 
 ##load calibration data
-calibration_data <- list.files(path = "calibration_data/", full.names = TRUE)
+calibration_data <- sort(list.files(path = "calibration_data/", full.names = TRUE), decreasing = TRUE)
 
+  ##load initial set
+  ##calibration data
   ##make sure nothing breaks here if no file is available
   if(length(calibration_data) == 0){
     results_CT <- NULL
@@ -30,10 +32,8 @@ calibration_data <- list.files(path = "calibration_data/", full.names = TRUE)
     sourceDR_FINAL <- NULL
     calibration_data <- "not available"
 
-  }else{
-    load(file = calibration_data)
-
   }
+
 
 ##initialise data
 file_data <- NULL
