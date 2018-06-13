@@ -195,7 +195,7 @@ shinyUI(
     h4("Dangerous zone"),
     fileInput("upload_calibrationdata", accept = "*.Rdata", label = "Upload own calibration dataset"),
     helpText("
-      A '.Rdata' file containing the objects 'results_CT', 'results_ITC' and 'sourceDR_FINAL'.
+      The '.Rdata' file must contain the objects 'results_CT', 'results_ITC' and 'sourceDR_FINAL'.
       Please note that this dataset is only valid for the current shiny session!"),
     actionButton("clear_calibrationdata", label = "Remove own calibration data", icon = icon("remove",lib = "glyphicon"))
 

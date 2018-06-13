@@ -609,13 +609,15 @@ shinyServer(function(input, output, session) {
   ##upload own calibration dataset
   observeEvent(input$upload_calibrationdata, {
 
-        ##TODO
-        ##This is very dangerous, someone could inject bad code here
+       ##inspect content
+       load(input$upload_calibrationdata$datapath, safe <- new.env())
 
-       #reset data
-       results_CT <<- NULL
-       results_ITC <<- NULL
-       sourceDR_FINAL <<- NULL
+       if(length(ls(safe)) == 3 && all(c("results_CT", "results_ITC", "sourceDR_FINAL") %in% ls(safe))){
+        #reset data
+        results_CT <<- NULL
+        results_ITC <<- NULL
+        sourceDR_FINAL <<- NULL
+
 
        ##load data
        load(input$upload_calibrationdata$datapath, envir = current_env)
@@ -625,6 +627,14 @@ shinyServer(function(input, output, session) {
          session, "calibration_data",
          choices = "Own dataset loaded")
 
+       }else{
+         showModal(modalDialog(
+           title = "Error",
+           "The uploaded calibration dataset is not supported, please only upload allowed data!",
+           footer = modalButton("Ok")
+         ))
+
+       }
 
   })
 
