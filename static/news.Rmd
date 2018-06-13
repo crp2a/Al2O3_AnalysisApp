@@ -1,7 +1,8 @@
 ## News and changes
 
 ### Version 0.1.2
-* Add Panel 'Avanced' with session information and an option to download the calibration data
+* Add Panel 'Settings' with session information and an option to download the calibration data
+* Panel 'Settings': Now supports uploading an own calibration dataset
 
 
 ### Version 0.1.1

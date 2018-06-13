@@ -166,6 +166,8 @@ shinyUI(
   ),
   # PANEL Settings ------------------------------------------------------------------------------
   tabPanel("Settings",
+    bookmarkButton("Bookmark this session (beta)"),
+    br(),
     h4("Session information"),
     HTML(paste("'Luminescence': ", packageDescription('Luminescence')$Version)),
     h5("Initially available R objects"),
