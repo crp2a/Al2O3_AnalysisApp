@@ -6,7 +6,6 @@
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyServer(function(input, output, session) {
 
-
     ##import data
     observeEvent(input$file_data, {
 
@@ -593,6 +592,17 @@ shinyServer(function(input, output, session) {
 
    })
 
+  # PANEL Advanced----- -------------------------------------------------------------------------
+  ##download handler for calibration data
+   output$download_CalibrationData <- downloadHandler(
+     filename = "CalibrationDatasets.zip",
+     content = function(file){
+
+       ##create ZIP-file
+       zip(zipfile = file, files = calibration_data, flags = "-j")
+     },
+     contentType = "application/zip"
+   )
 
   # Static pages --------------------------------------------------------------------------------
   output$about <- renderUI({

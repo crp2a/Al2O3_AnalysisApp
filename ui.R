@@ -10,7 +10,6 @@ shinyUI(
    windowTitle = "Al2O3:C Analysis App",
    footer = HTML("<hr><div align = 'center'><small>This software comes WITHOUT ANY WARRANTY.</small></div>"),
 
-
   # PANEL - Import ------------------------------------------------------------------------------
   tabPanel(title = "Import",
    sidebarLayout(
@@ -165,7 +164,42 @@ shinyUI(
           )
   , icon = icon("random", lib = "glyphicon")
   ),
-  # PANEL - About ------------------------------------------------------------------------------
+  # PANEL Advanced ------------------------------------------------------------------------------
+  tabPanel("Advanced",
+    h4("Session information"),
+    HTML(paste("'Luminescence': ", packageDescription('Luminescence')$Version)),
+    h5("Available R objects"),
+    HTML(paste("<ul>",
+               "<li>results_CT&nbsp;",
+               if (!is.null("results_CT")) {
+                 "<i class='fa fa-check-circle'></i>"
+               } else{
+                 "<i class='fa fa-times-circle'></i>"
+               },
+               "<li>results_ITC&nbsp;",
+               if (!is.null("results_ITC")) {
+                 "<i class='fa fa-check-circle'></i>"
+               } else{
+                 "<i class='fa fa-times-circle'></i>"
+               },
+               "<li>sourceDR_FINAL&nbsp;",
+               if (!is.null("sourceDR_FINAL")) {
+                 "<i class='fa fa-check-circle'></i>"
+               } else{
+                 "<i class='fa fa-times-circle'></i>"
+               },
+               "</ul>")),
+    hr(),
+    downloadButton("download_CalibrationData",label = "Download calibration data", icon = "download")
+    # fileInput("own_calibrationdata", accept = "*.Rdata", label = "Upload own calibration dataset"),
+    # helpText("A '.Rdata' file containing the objects 'results_CT', 'results_ITC' and 'sourceDR_FINAL'"),
+    # tags$hr(),
+    # downloadButton("Download_CalibrationData",label = "Download calibration data from server", icon = "download"),
+    # br(),
+    # br()
+
+  ,icon = icon("wrench", lib = "glyphicon")),
+ # PANEL - About ------------------------------------------------------------------------------
   tabPanel("About",
     fluidRow(
       column(10, offset = 1,

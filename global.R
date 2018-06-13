@@ -19,8 +19,9 @@ require(knitr)
 ##Shiny settings
 options(shiny.maxRequestSize=30*1024^2)
 enableBookmarking(store = "server")
+current_env <- environment()
 
-##load calibration data
+# Load calibration data -----------------------------------------------------------------------
 calibration_data <- sort(list.files(path = "calibration_data/", full.names = TRUE), decreasing = TRUE)
 
   ##load initial set
@@ -34,7 +35,8 @@ calibration_data <- sort(list.files(path = "calibration_data/", full.names = TRU
 
   }
 
-##initialise data
+
+# Initialise variables ------------------------------------------------------------------------
 file_data <- NULL
 file_info <- NULL
 file_structure <- NULL
