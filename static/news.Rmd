@@ -1,5 +1,8 @@
 ## News and changes
 
+### Version 0.1.2
+* Add Panel 'Avanced' with session information and an option to download the calibration data
+
 
 ### Version 0.1.1
 

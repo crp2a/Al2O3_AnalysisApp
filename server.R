@@ -174,9 +174,11 @@ shinyServer(function(input, output, session) {
   ##=============================##
   observeEvent(input$calibration_data,{
     ##load calibration dataset
+    if(!"Own dataset loaded" %in% unlist(input$calibration_data)){
     load(calibration_data[[grep(pattern = input$calibration_data,
                                 x = calibration_data,
-                                fixed = TRUE)]], envir = .GlobalEnv)
+                                fixed = TRUE)]], envir = current_env)
+    }
 
     ##show applied dose rate
     if(!is.null(sourceDR_FINAL)){
@@ -592,7 +594,7 @@ shinyServer(function(input, output, session) {
 
    })
 
-  # PANEL Advanced----- -------------------------------------------------------------------------
+  # PANEL Settings----- -------------------------------------------------------------------------
   ##download handler for calibration data
    output$download_CalibrationData <- downloadHandler(
      filename = "CalibrationDatasets.zip",
@@ -603,6 +605,39 @@ shinyServer(function(input, output, session) {
      },
      contentType = "application/zip"
    )
+
+  ##upload own calibration dataset
+  observeEvent(input$upload_calibrationdata, {
+
+        ##TODO
+        ##This is very dangerous, someone could inject bad code here
+
+       #reset data
+       results_CT <<- NULL
+       results_ITC <<- NULL
+       sourceDR_FINAL <<- NULL
+
+       ##load data
+       load(input$upload_calibrationdata$datapath, envir = current_env)
+
+       ##correct input path
+       updateSelectInput(
+         session, "calibration_data",
+         choices = "Own dataset loaded")
+
+
+  })
+
+  ##clear own dataset
+  observeEvent(input$clear_calibrationdata, {
+
+    ##correct input path
+    updateSelectInput(
+      session, "calibration_data",
+      choices = basename(sort(list.files(path = "calibration_data/", full.names = TRUE), decreasing = TRUE)))
+
+
+  })
 
   # Static pages --------------------------------------------------------------------------------
   output$about <- renderUI({

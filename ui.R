@@ -164,11 +164,11 @@ shinyUI(
           )
   , icon = icon("random", lib = "glyphicon")
   ),
-  # PANEL Advanced ------------------------------------------------------------------------------
-  tabPanel("Advanced",
+  # PANEL Settings ------------------------------------------------------------------------------
+  tabPanel("Settings",
     h4("Session information"),
     HTML(paste("'Luminescence': ", packageDescription('Luminescence')$Version)),
-    h5("Available R objects"),
+    h5("Initially available R objects"),
     HTML(paste("<ul>",
                "<li>results_CT&nbsp;",
                if (!is.null("results_CT")) {
@@ -190,13 +190,14 @@ shinyUI(
                },
                "</ul>")),
     hr(),
-    downloadButton("download_CalibrationData",label = "Download calibration data", icon = "download")
-    # fileInput("own_calibrationdata", accept = "*.Rdata", label = "Upload own calibration dataset"),
-    # helpText("A '.Rdata' file containing the objects 'results_CT', 'results_ITC' and 'sourceDR_FINAL'"),
-    # tags$hr(),
-    # downloadButton("Download_CalibrationData",label = "Download calibration data from server", icon = "download"),
-    # br(),
-    # br()
+    downloadButton("download_CalibrationData",label = "Download calibration data", icon = "download"),
+    hr(),
+    h4("Dangerous zone"),
+    fileInput("upload_calibrationdata", accept = "*.Rdata", label = "Upload own calibration dataset"),
+    helpText("
+      A '.Rdata' file containing the objects 'results_CT', 'results_ITC' and 'sourceDR_FINAL'.
+      Please note that this dataset is only valid for the current shiny session!"),
+    actionButton("clear_calibrationdata", label = "Remove own calibration data", icon = icon("remove",lib = "glyphicon"))
 
   ,icon = icon("wrench", lib = "glyphicon")),
  # PANEL - About ------------------------------------------------------------------------------
