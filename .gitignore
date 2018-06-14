@@ -38,5 +38,4 @@ internals/*
 shiny_bookmarks/*
 
 # Exclude calibration data
-calibration_data/20170321_Al2O3_CalibrationData.Rdata
-calibration_data/20180525_Al2O3_CalibrationData.Rdata
+calibration_data/*Al2O3_CalibrationData.Rdata$
