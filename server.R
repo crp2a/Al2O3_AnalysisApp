@@ -24,8 +24,6 @@ shinyServer(function(input, output, session) {
 
   })
 
-
-
   ##=============================##
   ##initial event of loading data
   ##=============================##
