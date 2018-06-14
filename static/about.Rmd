@@ -9,6 +9,8 @@ were solely carried out as described in Kreutzer et al. (2018). For all calculat
 **Author**: Sebastian Kreutzer, IRAMAT-CRP2A, UMR 5060, CNRS - Université Bordeaux Montaigne (France)
 
 **Contact**: sebastian.kreutzer@u-bordeaux-montaigne.fr
+
+**Bug reporting**: [https://github.com/RLumSK/Al2O3_AnalysisApp/issues](https://github.com/RLumSK/Al2O3_AnalysisApp/issues)
   
 ## References to cite
 
