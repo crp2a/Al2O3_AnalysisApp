@@ -16,6 +16,9 @@ shinyUI(
     sidebarPanel(
       fileInput("file_data", accept = "*.xsyg",
                label = "Select XSYG-files containing your measurement data...", multiple = TRUE),
+      div(
+       actionButton("file_data_example", label = "Load example data")
+      ,align = "center"),
         fluidRow(
           br(),
           div(

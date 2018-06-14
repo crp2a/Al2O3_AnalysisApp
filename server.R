@@ -6,57 +6,33 @@
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyServer(function(input, output, session) {
 
-    ##import data
-    observeEvent(input$file_data, {
-
-          ##data import
-          file_data <<- read_XSYG2R(
-            file = as.list(input$file_data$datapath),
-            fastForward = TRUE,
-            verbose = FALSE
-          )
-
-          ##import info
-          file_info <<- read_XSYG2R(
-            file = as.list(input$file_data$datapath),
-            fastForward = TRUE,
-            verbose = FALSE,
-            import = FALSE
-          )
-
-          ##replace names by real file names
-          file_info[["name"]] <<- rep(input$file_data$name, each = nrow(file_info)/length(input$file_data$name))
-
-
-          ##create file structure object
-          file_structure <<- structure_RLum(file_data)
-
-          ##TODO
-          ##add server logic for verifying the import status
-
-          ##deconstruct to wheels
-          ##extract needed columns
-          wheels <- file_info[["position"]]
-
-          for(n in 1:max(table(wheels))){
-            wheels[!duplicated(wheels) &
-                     !grepl(pattern = "wheel", x = wheels)] <- paste0("wheel", n)
-
-          }
-
-          ##return wheels
-          file_info <<- cbind(file_info, wheels = as.character(wheels))
-
-    })
-
-
-
 # PANEL IMPORT------------------------------------------------------------------------------------
+
+  ##=============================##
+  ##import data
+  ##=============================##
+   observeEvent(input$file_data, {
+      .import_file(file = as.list(input$file_data$datapath), name = input$file_data$name)
+
+   })
+
+  ##=============================##
+  ##import example data
+  ##=============================##
+  observeEvent(input$file_data_example, {
+    .import_file(file = list.files("example_data/", full.names = TRUE), name = "Example data")
+
+  })
+
+
 
   ##=============================##
   ##initial event of loading data
   ##=============================##
-  observeEvent(input$file_data, {
+  observeEvent({
+    input$file_data
+    input$file_data_example
+    }, {
 
     ##set tabs
     output$tabs <- renderUI({
@@ -78,7 +54,10 @@ shinyServer(function(input, output, session) {
   ##=============================##
   ##table - initial event
   ##=============================##
-  observeEvent(input$file_data, {
+  observeEvent({
+    input$file_data
+    input$file_data_example
+    }, {
     ##initialise sample
     sample_info_full <<- reactiveValues(
       data = data.frame(

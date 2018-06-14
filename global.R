@@ -47,7 +47,57 @@ df <- NULL
 df_reactive <- NULL
 dosimeter_type <- c("field", "travel")
 
-# Carousel plot -------------------------------------------------------------------------------
+
+
+# Helper functions ----------------------------------------------------------------------------
+
+##+++++++++++++++++++
+##IMPORT FILE
+##++++++++++++++++++
+.import_file <- function(file, name){
+  ##import file
+  ##data import
+  file_data <<- read_XSYG2R(
+    file = file,
+    fastForward = TRUE,
+    verbose = FALSE
+  )
+
+  ##import info
+  file_info <<- read_XSYG2R(
+    file = file,
+    fastForward = TRUE,
+    verbose = FALSE,
+    import = FALSE
+  )
+
+  ##replace names by real file names
+  file_info[["name"]] <<- rep(name, each = nrow(file_info)/length(name))
+
+
+  ##create file structure object
+  file_structure <<- structure_RLum(file_data)
+
+  ##TODO
+  ##add server logic for verifying the import status
+
+  ##deconstruct to wheels
+  ##extract needed columns
+  wheels <- file_info[["position"]]
+
+  for(n in 1:max(table(wheels))){
+    wheels[!duplicated(wheels) &
+             !grepl(pattern = "wheel", x = wheels)] <- paste0("wheel", n)
+
+  }
+
+  ##return wheels
+  file_info <<- cbind(file_info, wheels = as.character(wheels))
+}
+
+##+++++++++++++++++++
+##PLOT CAROUSEL
+##++++++++++++++++++
 plot_carousel <<- function(positions = NULL, wheel = NULL, included = NULL){
 
   ##pre-calculation
