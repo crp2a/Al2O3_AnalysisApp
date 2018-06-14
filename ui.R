@@ -222,14 +222,6 @@ shinyUI(
     actionButton("clear_calibrationdata", label = "Remove own calibration data", icon = icon("remove",lib = "glyphicon"))
 
   ,icon = icon("wrench", lib = "glyphicon")),
- # PANEL - About ------------------------------------------------------------------------------
-  tabPanel("About",
-    fluidRow(
-      column(10, offset = 1,
-        uiOutput('about')
-      )
-    ),icon = icon("info-sign", lib = "glyphicon")
-  ),#About
   # PANEL - News ------------------------------------------------------------------------------
   tabPanel("News",
            fluidRow(
@@ -237,7 +229,15 @@ shinyUI(
                     uiOutput('news')
              )
            ),icon = icon("list-alt", lib = "glyphicon")
-  )#news
+  ),#news
+  # PANEL - About ------------------------------------------------------------------------------
+  tabPanel("About",
+           fluidRow(
+             column(10, offset = 1,
+                    uiOutput('about')
+             )
+           ),icon = icon("info-sign", lib = "glyphicon")
+  )#About
  )##navbarPage
 )##ShinyUI
 
