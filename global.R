@@ -98,7 +98,7 @@ dosimeter_type <- c("field", "travel")
 ##+++++++++++++++++++
 ##PLOT CAROUSEL
 ##++++++++++++++++++
-plot_carousel <<- function(positions = NULL, wheel = NULL, included = NULL){
+.plot_carousel <<- function(positions = NULL, wheel = NULL, included = NULL){
 
   ##pre-calculation
   arc.step <- (2 * pi) / 40

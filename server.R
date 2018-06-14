@@ -123,7 +123,7 @@ shinyServer(function(input, output, session) {
 
       ##update plot
       output$carousel <- renderPlot({
-        plot_carousel(positions = as.numeric(file_info$position),
+        .plot_carousel(positions = as.numeric(file_info$position),
           included =  sample_info_full$data[["INCLUDE"]][which(file_info[["wheels"]] == input$wheels)],
           wheel = input$wheels
           )}, height = 320, width = 320, bg="transparent"
