@@ -7,9 +7,9 @@
 
 ##load needed packages
 rm(list = ls())
+require(Luminescence)
 require(shiny)
 require(shinyjs)
-require(Luminescence)
 require(shape)
 require(rhandsontable)
 require(plyr)
