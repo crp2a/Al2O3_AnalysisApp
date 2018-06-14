@@ -34,7 +34,17 @@ calibration_data <- sort(list.files(path = "calibration_data/", full.names = TRU
     sourceDR_FINAL <- NULL
     calibration_data <- "not available"
 
+  }else{
+    ##make sure that the example data is only loaded if needed
+    if(length(calibration_data) > 1){
+      calibration_data <- calibration_data[
+        !grepl(pattern = "Example_Calibration.Rdata", x = calibration_data, fixed = TRUE)]
+
+    }
+
   }
+
+
 
 
 # Initialise variables ------------------------------------------------------------------------
