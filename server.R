@@ -2,7 +2,7 @@
 ## Title:   Al2O3:C Analysis App
 ## Authors: Sebastian Kreutzer, IRAMAT-CRP2A, Université Bordeaux Montaigne (France)
 ## Contact: sebastian.kreutzer@u-bordeaux-montainge.fr
-## Initial: 2018-06-10
+## Initial date: 2018-06-07
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyServer(function(input, output, session) {
 
@@ -27,11 +27,11 @@ shinyServer(function(input, output, session) {
   ##=============================##
   ##initial event of loading data
   ##=============================##
-  observeEvent({
-    input$file_data
-    input$file_data_example
-    }, {
+  observeEvent(c(
+    input$file_data_example,
+    input$file_data), {
 
+    if(!is.null(file_data)){
     ##set tabs
     output$tabs <- renderUI({
 
@@ -45,44 +45,46 @@ shinyServer(function(input, output, session) {
       ##create call for the frontend
       do.call(tabsetPanel, c(Tabs, id = "wheels"))
 
-    })
+      })
+    }
 
   })
 
   ##=============================##
   ##table - initial event
   ##=============================##
-  observeEvent({
-    input$file_data
-    input$file_data_example
-    }, {
-    ##initialise sample
-    sample_info_full <<- reactiveValues(
-      data = data.frame(
-        FILENAME = file_info$name,
-        WHEEL = as.character(file_info[["wheels"]]),
-        POSITION = as.integer(file_info$position),
-        SAMPLE_ID = paste("Sample ", as.character(file_info$position)),
-        TYPE = dosimeter_type[1],
-        INCLUDE = TRUE,
-        IMPORT_STATUS = "OK",
-        stringsAsFactors = FALSE
-      ))
+  observeEvent(c(
+    input$file_data_example,
+    input$file_data),{
 
-    ##create sample_info output
-    output$sample_info <- renderRHandsontable({
-      rhandsontable(data = sample_info_full$data[which(file_info[["wheels"]] == "wheel1"), ]) %>%
-        hot_context_menu(
-          allowRowEdit = FALSE,
-          allowColEdit = FALSE) %>%
-        hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE)  %>%
-        hot_col("FILENAME", readOnly = TRUE) %>%
-        hot_col("WHEEL", readOnly = TRUE) %>%
-        hot_col("POSITION", readOnly = TRUE) %>%
-        hot_col("TYPE", type = "dropdown", source = dosimeter_type) %>%
-        hot_col("IMPORT_STATUS", readOnly = TRUE)
+    if(!is.null(file_data)){
+      ##initialise sample
+      sample_info_full <<- reactiveValues(
+        data = data.frame(
+          FILENAME = file_info$name,
+          WHEEL = as.character(file_info[["wheels"]]),
+          POSITION = as.integer(file_info$position),
+          SAMPLE_ID = paste("Sample ", as.character(file_info$position)),
+          TYPE = dosimeter_type[1],
+          INCLUDE = verify,
+          stringsAsFactors = FALSE
+        ))
 
-    })
+      ##create sample_info output
+      output$sample_info <- renderRHandsontable({
+        rhandsontable(data = sample_info_full$data[which(file_info[["wheels"]] == "wheel1"), ]) %>%
+          hot_context_menu(
+            allowRowEdit = FALSE,
+            allowColEdit = FALSE) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE)  %>%
+          hot_col("FILENAME", readOnly = TRUE) %>%
+          hot_col("WHEEL", readOnly = TRUE) %>%
+          hot_col("POSITION", readOnly = TRUE) %>%
+          hot_col("TYPE", type = "dropdown", source = dosimeter_type)
+
+      })
+
+    }
 
   })
 
@@ -99,8 +101,7 @@ shinyServer(function(input, output, session) {
       hot_col("FILENAME", readOnly = TRUE) %>%
       hot_col("WHEEL", readOnly = TRUE) %>%
       hot_col("POSITION", readOnly = TRUE) %>%
-      hot_col("TYPE", type = "dropdown", source = dosimeter_type) %>%
-      hot_col("IMPORT_STATUS", readOnly = TRUE)
+      hot_col("TYPE", type = "dropdown", source = dosimeter_type)
 
     })
 

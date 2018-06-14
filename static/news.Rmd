@@ -3,6 +3,8 @@
 ### Version 0.1.2
 * Add Panel 'Settings' with session information and an option to download the calibration data
 * Panel 'Settings': Now supports uploading an own calibration dataset
+* Internals: The app now verifies the data structure of the imported files based on a reference 
+has. If the has values do not match the dataset is automatically excluded. 
 
 
 ### Version 0.1.1

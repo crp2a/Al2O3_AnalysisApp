@@ -2,7 +2,7 @@
 ## Title:   Al2O3:C Analysis App
 ## Authors: Sebastian Kreutzer, IRAMAT-CRP2A, Université Bordeaux Montaigne (France)
 ## Contact: sebastian.kreutzer@u-bordeaux-montainge.fr
-## Initial:    2018-06-10
+## Initial data:    2018-06-07
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyUI(
  navbarPage(
@@ -181,7 +181,8 @@ shinyUI(
          "&nbsp; + 'rhandsontable' (v", packageDescription('rhandsontable')$Version,")<br>",
          "&nbsp; + 'plyr' (v", packageDescription('plyr')$Version,")<br>",
          "&nbsp; + 'ggplot2' (v", packageDescription('ggplot2')$Version,")<br>",
-         "&nbsp; + 'knitr' (v", packageDescription('knitr')$Version,")<br>"
+         "&nbsp; + 'knitr' (v", packageDescription('knitr')$Version,")<br>",
+         "&nbsp; + 'digest' (v", packageDescription('digest')$Version,")<br>"
 
     )),
     HTML(paste("<br><b>Initially available R objects</b><br><ul>",
@@ -204,12 +205,20 @@ shinyUI(
                  "<i class='fa fa-times-circle'></i>"
                },
                "</ul>")),
+    HTML(paste("<b>Data verification hash</b><br> md5:  ", verification_hash)),
+    helpText(HTML("The verification hash was generated from a reference data structure the time this app was created<br>
+                  to ensure that only measurement data that can be analysed by this app are imported.<br>
+                  The hash is hard coded and cannot be changed.
+                  ")),
     hr(),
     h4("Dangerous zone"),
     fileInput("upload_calibrationdata", accept = "*.Rdata", label = "Upload own calibration dataset"),
-    helpText("
-      The '.Rdata' file must contain the objects 'results_CT', 'results_ITC' and 'sourceDR_FINAL'.
-      Please note that this dataset is only valid for the current shiny session!"),
+    helpText(HTML("
+      The '.Rdata' file must contain the objects <br>
+      - 'results_CT', <br>
+      - 'results_ITC',<br>
+      - 'sourceDR_FINAL'.<br>
+      Please note that any dataset uploaded here is only valid for the current shiny session!")),
     actionButton("clear_calibrationdata", label = "Remove own calibration data", icon = icon("remove",lib = "glyphicon"))
 
   ,icon = icon("wrench", lib = "glyphicon")),

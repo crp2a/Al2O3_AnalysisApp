@@ -2,7 +2,7 @@
 ## Title:   Al2O3:C Analysis App
 ## Authors: Sebastian Kreutzer, IRAMAT-CRP2A, Université Bordeaux Montaigne (France)
 ## Contact: sebastian.kreutzer@u-bordeaux-montainge.fr
-## Date:    2018-06-07
+## Initial date:    2018-06-07
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ##load needed packages
@@ -15,6 +15,7 @@ require(rhandsontable)
 require(plyr)
 require(ggplot2)
 require(knitr)
+require(digest)
 
 ##Shiny settings
 options(shiny.maxRequestSize=30*1024^2)
@@ -45,7 +46,9 @@ results <- list()
 temp_files <<- list()
 df <- NULL
 df_reactive <- NULL
+verify <- TRUE
 dosimeter_type <- c("field", "travel")
+verification_hash <- "c2bba3c97909e573a3f7b25dad61380d"
 
 
 
@@ -71,15 +74,41 @@ dosimeter_type <- c("field", "travel")
     import = FALSE
   )
 
+    ##verify file data and kick out the rest
+    verify <<- vapply(file_data, function(v) {
+      digest::digest(names(v), algo = "md5") == "c2bba3c97909e573a3f7b25dad61380d"
+    }, logical(1))
+
+    ##kick out what do not belong into the dataset
+    if(!all(verify)){
+     if(!any(verify)){
+       showModal(modalDialog(
+         title = "Verification hash mismatch",
+         "All files were excluded, try another file!",
+         footer = modalButton("Ok, I'll select another file")
+       ))
+
+       file_data <<- NULL
+       file_info <<- NULL
+       return()
+
+     }else{
+       showModal(modalDialog(
+         title = "Verification hash mismatch",
+         "Some of your data do not appear to be Al2O3:C measurement data and were automatically excluded!",
+         footer = modalButton("Well, that may happen.")
+       ))
+
+
+    }
+
+   }
+
   ##replace names by real file names
   file_info[["name"]] <<- rep(name, each = nrow(file_info)/length(name))
 
-
   ##create file structure object
   file_structure <<- structure_RLum(file_data)
-
-  ##TODO
-  ##add server logic for verifying the import status
 
   ##deconstruct to wheels
   ##extract needed columns
