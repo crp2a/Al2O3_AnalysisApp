@@ -4,14 +4,13 @@ The 'Al2O3:C Analysis App' is a [Shiny](http://shiny.rstudio.com) application pr
 
 ## Impressions
 
-
-
+![](img/screenshots.png)
 
 ## Installation and usage
 
 ### Requirements
 
-This app needs the R package 'Luminescence' in version 0.9.0 or above.
+This app needs the R package 'Luminescence' in version 0.9.0 or newer.
 
 ### Installation
 
