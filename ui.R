@@ -170,11 +170,21 @@ shinyUI(
   # PANEL Settings ------------------------------------------------------------------------------
   tabPanel("Settings",
     bookmarkButton("Bookmark this session (beta)"),
+    downloadButton("download_CalibrationData",label = "Download calibration data", icon = "download"),
     br(),
     h4("Session information"),
-    HTML(paste("'Luminescence': ", packageDescription('Luminescence')$Version)),
-    h5("Initially available R objects"),
-    HTML(paste("<ul>",
+    HTML(paste0("<b>Loaded R packages</b><br>",
+         "&nbsp; + 'Luminescence' (v", packageDescription('Luminescence')$Version,")<br>",
+         "&nbsp; + 'shiny' (v", packageDescription('shiny')$Version,")<br>",
+         "&nbsp; + 'shinyjs' (v", packageDescription('shinyjs')$Version,")<br>",
+         "&nbsp; + 'shape' (v", packageDescription('shape')$Version,")<br>",
+         "&nbsp; + 'rhandsontable' (v", packageDescription('rhandsontable')$Version,")<br>",
+         "&nbsp; + 'plyr' (v", packageDescription('plyr')$Version,")<br>",
+         "&nbsp; + 'ggplot2' (v", packageDescription('ggplot2')$Version,")<br>",
+         "&nbsp; + 'knitr' (v", packageDescription('knitr')$Version,")<br>"
+
+    )),
+    HTML(paste("<br><b>Initially available R objects</b><br><ul>",
                "<li>results_CT&nbsp;",
                if (!is.null("results_CT")) {
                  "<i class='fa fa-check-circle'></i>"
@@ -194,8 +204,6 @@ shinyUI(
                  "<i class='fa fa-times-circle'></i>"
                },
                "</ul>")),
-    hr(),
-    downloadButton("download_CalibrationData",label = "Download calibration data", icon = "download"),
     hr(),
     h4("Dangerous zone"),
     fileInput("upload_calibrationdata", accept = "*.Rdata", label = "Upload own calibration dataset"),
