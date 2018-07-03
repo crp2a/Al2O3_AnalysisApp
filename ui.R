@@ -17,6 +17,10 @@ shinyUI(
       fileInput("file_data", accept = "*.xsyg",
                label = "Select XSYG-files containing your measurement data...", multiple = TRUE),
       div(
+       checkboxInput("import_file_names_assignment",
+          label = "Use filenames for wheel assignment",
+          value = FALSE),
+       br(),
        actionButton("file_data_example", label = "Load example data")
       ,align = "center"),
         fluidRow(

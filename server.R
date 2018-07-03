@@ -12,7 +12,11 @@ shinyServer(function(input, output, session) {
   ##import data
   ##=============================##
    observeEvent(input$file_data, {
-      .import_file(file = as.list(input$file_data$datapath), name = input$file_data$name)
+      .import_file(
+        file = as.list(input$file_data$datapath),
+        name = input$file_data$name,
+        import_file_names_assignment = input$import_file_names_assignment
+        )
 
    })
 
@@ -36,7 +40,7 @@ shinyServer(function(input, output, session) {
     output$tabs <- renderUI({
 
       ##get number of needed wheels
-      wheels <- max(table(file_info[["position"]]))
+      wheels <- length(unique(as.character(file_info[["wheels"]])))
 
       ##set number of needed tabs
       Tabs <- lapply(1:wheels, function(x){

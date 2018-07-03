@@ -66,7 +66,7 @@ verification_hash <- "c2bba3c97909e573a3f7b25dad61380d"
 ##+++++++++++++++++++
 ##IMPORT FILE
 ##++++++++++++++++++
-.import_file <- function(file, name){
+.import_file <- function(file, name, import_file_names_assignment = NULL){
   ##import file
   ##data import
   file_data <<- read_XSYG2R(
@@ -114,19 +114,33 @@ verification_hash <- "c2bba3c97909e573a3f7b25dad61380d"
    }
 
   ##replace names by real file names
-  file_info[["name"]] <<- rep(name, each = nrow(file_info)/length(name))
+  for(i in 1:length(unique(file_info[["parentID"]]))){
+    file_info[["name"]][grepl(pattern = unique(file_info[["parentID"]])[i], x = file_info[["parentID"]], fixed = TRUE)] <<- name[i]
+
+  }
 
   ##create file structure object
   file_structure <<- structure_RLum(file_data)
 
   ##deconstruct to wheels
   ##extract needed columns
-  wheels <- file_info[["position"]]
+  if (!is.null(import_file_names_assignment) && import_file_names_assignment == TRUE) {
+    wheels <- file_info[["name"]]
+    unique_names <- unique(wheels)
 
-  for(n in 1:max(table(wheels))){
-    wheels[!duplicated(wheels) &
-             !grepl(pattern = "wheel", x = wheels)] <- paste0("wheel", n)
+    for(n in 1:length(unique_names)){
+      wheels[grepl(pattern = unique_names[n], x = wheels)] <- paste0("wheel", n)
 
+    }
+
+
+  }else{
+    wheels <- file_info[["position"]]
+    for(n in 1:max(table(wheels))){
+      wheels[!duplicated(wheels) &
+               !grepl(pattern = "wheel", x = wheels)] <- paste0("wheel", n)
+
+    }
   }
 
   ##return wheels
