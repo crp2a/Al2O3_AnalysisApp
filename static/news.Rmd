@@ -3,6 +3,9 @@
 ### Version 0.1.3
 * Add option to allow the wheel number assignment based on the file name and not the position number. 
 This in particular helpful if you want to mix different files for one analysis. 
+* The context menu 'Download to CSV' was not working in the panel 'post-processing' due to an 
+error in the underlying JavaScript code; the workaround presets the columns with 0, which circumvents this 
+error. 
 
 
 ### Version 0.1.2

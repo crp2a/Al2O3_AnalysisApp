@@ -449,9 +449,9 @@ shinyServer(function(input, output, session) {
              results_final$data,
              DATE_IN = Sys.Date(),
              DATE_OUT = Sys.Date(),
-             DURATION = NA_integer_,
-             DR = NA_real_,
-             DR.ERROR = NA_real_
+             DURATION = 0,
+             DR = 0,
+             DR.ERROR = 0
              )
 
          }
@@ -489,28 +489,27 @@ shinyServer(function(input, output, session) {
        ##create table output
        output$postprocessing_results <- renderRHandsontable({
          rownames(results_final$data) <- 1:nrow(results_final$data)
-         rhandsontable(data = results_final$data, readOnly = TRUE, selectCallback = TRUE,
-         customOpts = list(
-           csv = list(name = "Download to CSV",
-                      callback = htmlwidgets::JS(
-                        "function (key, options) {
-                           var csv = csvString(this, sep=',', dec='.');
-
-                           var link = document.createElement('a');
-                           link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
-                             encodeURIComponent(csv));
-                           link.setAttribute('download', 'data.csv');
-
-                           document.body.appendChild(link);
-                           link.click();
-                           document.body.removeChild(link);
-                         }")))) %>%
-           hot_col("DATE_IN", readOnly = FALSE) %>%
-           hot_col("DATE_OUT", readOnly = FALSE) %>%
+         rhandsontable(data = results_final$data, readOnly = TRUE, selectCallback = TRUE) %>%
            hot_context_menu(
              allowRowEdit = FALSE,
-             allowColEdit = FALSE) %>%
-           hot_table(allowRowEdit = FALSE) %>%
+             allowColEdit = FALSE,
+              customOpts = list(
+                 csv = list(name = "Download to CSV",
+                            callback = htmlwidgets::JS(
+                              "function (key, options) {
+                         var csv = csvString(this, sep=',', dec='.');
+                         var link = document.createElement('a');
+                         link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
+                           encodeURIComponent(csv));
+                         link.setAttribute('download', 'Data_summary.csv');
+
+                         document.body.appendChild(link);
+                         link.click();
+                         document.body.removeChild(link);
+                       }")))) %>%
+           hot_col("DATE_IN", readOnly = FALSE) %>%
+           hot_col("DATE_OUT", readOnly = FALSE) %>%
+           hot_table(allowRowEdit = FALSE, highlightCol = TRUE, highlightRow = TRUE) %>%
            hot_heatmap(cols = 13) %>%
            hot_cols(columnSorting = TRUE)
 
@@ -547,28 +546,28 @@ shinyServer(function(input, output, session) {
 
      ##create table output
      output$postprocessing_results <- renderRHandsontable({
-       rhandsontable(data = results_final$data, readOnly = TRUE, selectCallback = TRUE,
-                     customOpts = list(
-                       csv = list(name = "Download to CSV",
-                                  callback = htmlwidgets::JS(
-                                    "function (key, options) {
-                           var csv = csvString(this, sep=',', dec='.');
-
-                           var link = document.createElement('a');
-                           link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
-                             encodeURIComponent(csv));
-                           link.setAttribute('download', 'data.csv');
-
-                           document.body.appendChild(link);
-                           link.click();
-                           document.body.removeChild(link);
-                         }")))) %>%
-         hot_col("DATE_IN", readOnly = FALSE) %>%
-         hot_col("DATE_OUT", readOnly = FALSE) %>%
+       rhandsontable(data = results_final$data, readOnly = TRUE, selectCallback = TRUE) %>%
          hot_context_menu(
            allowRowEdit = FALSE,
-           allowColEdit = FALSE) %>%
-         hot_table(allowRowEdit = FALSE) %>%
+           allowColEdit = FALSE,
+           customOpts = list(
+             csv = list(name = "Download to CSV",
+                        callback = htmlwidgets::JS(
+                          "function (key, options) {
+                         var csv = csvString(this, sep=',', dec='.');
+
+                         var link = document.createElement('a');
+                         link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
+                           encodeURIComponent(csv));
+                         link.setAttribute('download', 'Data_summary.csv');
+
+                         document.body.appendChild(link);
+                         link.click();
+                         document.body.removeChild(link);
+                       }")))) %>%
+         hot_col("DATE_IN", readOnly = FALSE) %>%
+         hot_col("DATE_OUT", readOnly = FALSE) %>%
+         hot_table(allowRowEdit = FALSE, highlightCol = TRUE, highlightRow = TRUE) %>%
          hot_heatmap(cols = 13) %>%
          hot_cols(columnSorting = TRUE)
 
