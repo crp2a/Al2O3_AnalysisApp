@@ -437,6 +437,7 @@ shinyServer(function(input, output, session) {
        ##combine
       results_final <<- reactiveValues(data = cbind(
            df_grouped,
+           MEASUREMENT_DATE = as.Date(strtrim(file_info$startDate[1],8), format = "%Y%m%d"),
            SOURCE_DR = source_dose_rate[[1]],
            SOURCE_DR.ERROR = source_dose_rate[[2]],
            DOSE = df_grouped[["MEAN"]] * source_dose_rate[,1],
@@ -450,6 +451,11 @@ shinyServer(function(input, output, session) {
              DATE_IN = Sys.Date(),
              DATE_OUT = Sys.Date(),
              DURATION = 0,
+             COSMIC_DR = 0,
+             COSMIC_DR.ERROR = 0,
+             ATTENUATION_CORR = 1.068,
+             DOSE_CORR = 0,
+             DOSE_CORR.ERROR = 0,
              DR = 0,
              DR.ERROR = 0
              )
@@ -458,9 +464,18 @@ shinyServer(function(input, output, session) {
 
         ##make sure that the sample headers are ok
         colnames(results_final$data) <- c(
-          "SAMPLE_ID", "N", "SAMPLE MEAN \n [s]", "SAMPLE SD \n [s]", "CV \n [%]", "SOURCE_DR \n [µGy/s]",
+          "SAMPLE_ID", "N", "SAMPLE MEAN \n [s]", "SAMPLE SD \n [s]", "CV \n [%]",
+          "DATE \n MEASUREMENT",
+          "SOURCE_DR \n [µGy/s]",
           "SOURCE_DR.ERROR \n [µGy/s]", "DOSE \n [µGy]", "DOSE.ERROR \n [µGy]", "DATE_IN", "DATE_OUT",
-          "DURATION \n [days]", "FINAL DR \n [µGy/a]", "FINAL DR.ERROR \n [µGy/a]"
+          "DURATION \n [days]",
+          "COSMIC_DR \n [µGy/a]",
+          "COSMIC_DR.ERROR \n [µGy/a]",
+          "TUBE ATTENUATION \n CORRECTION FACTOR",
+          "DOSE_CORR \n [µGy]",
+          "DOSE_CORR.ERROR \n [µGy]",
+          "FINAL DR \n [µGy/a]",
+          "FINAL DR.ERROR \n [µGy/a]"
           )
 
         ##add new ui to add a new 'update' button
@@ -509,8 +524,11 @@ shinyServer(function(input, output, session) {
                        }")))) %>%
            hot_col("DATE_IN", readOnly = FALSE) %>%
            hot_col("DATE_OUT", readOnly = FALSE) %>%
+           hot_col(col = 14, readOnly = FALSE) %>%
+           hot_col(col = 15, readOnly = FALSE) %>%
+           hot_col(col = 16, readOnly = FALSE) %>%
            hot_table(allowRowEdit = FALSE, highlightCol = TRUE, highlightRow = TRUE) %>%
-           hot_heatmap(cols = 13) %>%
+           hot_heatmap(cols = 19) %>%
            hot_cols(columnSorting = TRUE)
 
        })
@@ -538,11 +556,20 @@ shinyServer(function(input, output, session) {
      results_final$data[["DURATION \n [days]"]] <-  as.integer(
        results_final$data[["DATE_OUT"]] - results_final$data[["DATE_IN"]])
 
+     ##update DOSE based on the given cosmic dose rate and the attenuation factor
+     results_final$data[["DOSE_CORR \n [µGy]"]] <- ((results_final$data[["DOSE \n [µGy]"]] - results_final$data[["COSMIC_DR \n [µGy/a]"]]) *
+                                                      results_final$data[["TUBE ATTENUATION \n CORRECTION FACTOR"]]) + results_final$data[["COSMIC_DR \n [µGy/a]"]]
+
+
+     results_final$data[["DOSE_CORR.ERROR \n [µGy]"]] <- sqrt((results_final$data[["TUBE ATTENUATION \n CORRECTION FACTOR"]] * results_final$data[["DOSE.ERROR \n [µGy]"]])^2 +
+       ((-results_final$data[["TUBE ATTENUATION \n CORRECTION FACTOR"]] + 1) * results_final$data[["COSMIC_DR.ERROR \n [µGy/a]"]])^2)
+
+
      ##update DR and DR.ERROR
-     results_final$data[["FINAL DR \n [µGy/a]"]] <- results_final$data[["DOSE \n [µGy]"]] * 365.25 / results_final$data[["DURATION \n [days]"]]
-     results_final$data[["FINAL DR.ERROR \n [µGy/a]" ]] <- ((results_final$data[["DOSE \n [µGy]"]] * 365.25) /
+     results_final$data[["FINAL DR \n [µGy/a]"]] <- results_final$data[["DOSE_CORR \n [µGy]"]] * 365.25 / results_final$data[["DURATION \n [days]"]]
+     results_final$data[["FINAL DR.ERROR \n [µGy/a]" ]] <- ((results_final$data[["DOSE_CORR \n [µGy]"]] * 365.25) /
                                                               as.numeric(results_final$data[["DURATION \n [days]"]])) *
-        results_final$data[["DOSE.ERROR \n [µGy]"]] /  results_final$data[["DOSE \n [µGy]"]]
+        results_final$data[["DOSE_CORR.ERROR \n [µGy]"]] /  results_final$data[["DOSE_CORR \n [µGy]"]]
 
      ##create table output
      output$postprocessing_results <- renderRHandsontable({
@@ -567,8 +594,11 @@ shinyServer(function(input, output, session) {
                        }")))) %>%
          hot_col("DATE_IN", readOnly = FALSE) %>%
          hot_col("DATE_OUT", readOnly = FALSE) %>%
+         hot_col(col = 14, readOnly = FALSE) %>%
+         hot_col(col = 15, readOnly = FALSE) %>%
+         hot_col(col = 16, readOnly = FALSE) %>%
          hot_table(allowRowEdit = FALSE, highlightCol = TRUE, highlightRow = TRUE) %>%
-         hot_heatmap(cols = 13) %>%
+         hot_heatmap(cols = 19) %>%
          hot_cols(columnSorting = TRUE)
 
     })
