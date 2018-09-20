@@ -68,7 +68,7 @@ shinyServer(function(input, output, session) {
           FILENAME = file_info$name,
           WHEEL = as.character(file_info[["wheels"]]),
           POSITION = as.integer(file_info$position),
-          SAMPLE_ID = paste("Sample ", as.character(file_info$position)),
+          SAMPLE_ID = sprintf("Sample %02d", as.numeric(file_info$position)),
           TYPE = dosimeter_type[1],
           INCLUDE = verify,
           stringsAsFactors = FALSE
@@ -129,7 +129,7 @@ shinyServer(function(input, output, session) {
       ##update plot
       output$carousel <- renderPlot({
         .plot_carousel(positions = as.numeric(file_info$position),
-          included =  sample_info_full$data[["INCLUDE"]][which(file_info[["wheels"]] == input$wheels)],
+          included = sample_info_full$data[["INCLUDE"]][which(file_info[["wheels"]] == input$wheels)],
           wheel = input$wheels
           )}, height = 320, width = 320, bg="transparent"
        )
@@ -191,8 +191,8 @@ shinyServer(function(input, output, session) {
         ##remove all values previously deselected
         file_data[!sample_info_full$data[["INCLUDE"]]] <- NULL
 
-        ##identify travel dosimeters
-        travel_dosimeters <- which(
+        ##identify travel dosimeters (with the position number; just in case)
+        travel_dosimeters <-  which(
           sample_info_full$data[["TYPE"]][sample_info_full$data[["INCLUDE"]]] == 'travel')
 
         if(length(travel_dosimeters) == 0 || !input$settings_travel_dosimeter)
@@ -226,7 +226,9 @@ shinyServer(function(input, output, session) {
           shinyjs::html(id = "warnings", html = "")
           analyse_Al2O3C_Measurement(
             object = file_data,
-            travel_dosimeter = travel_dosimeters,
+            travel_dosimeter = if(!is.null(travel_dosimeters)){
+              sample_info_full$data[["POSITION"]][travel_dosimeters]
+              } else {NULL},
             signal_integral = input$settings_signal_integral,
             irradiation_time_correction = results_ITC,
             cross_talk_correction = if(input$settings_cross_talk_correction){
@@ -242,7 +244,6 @@ shinyServer(function(input, output, session) {
         })
 
       })#end progressbar
-
 
       ##create data.frame
       df <<- cbind(
@@ -434,7 +435,7 @@ shinyServer(function(input, output, session) {
 
        }
 
-       ##combine
+      ##combine
       results_final <<- reactiveValues(data = cbind(
            df_grouped,
            MEASUREMENT_DATE = as.Date(strtrim(file_info$startDate[1],8), format = "%Y%m%d"),
@@ -497,7 +498,8 @@ shinyServer(function(input, output, session) {
          xlab("SAMPLE ID") +
          ylab(expression(paste(D[e], " [µGy]"))) +
          ggtitle("Totally Absorbed Dose") +
-         theme_gray(base_size = 14)
+         theme_gray(base_size = 14) +
+         theme(axis.text.x = element_text(angle = 45, hjust = 1))
        }, width = 800)
 
 
@@ -552,6 +554,7 @@ shinyServer(function(input, output, session) {
    ##update post-processing table
    observeEvent(input$post_processing_update, {
 
+
      ##update DURATION
      results_final$data[["DURATION \n [days]"]] <-  as.integer(
        results_final$data[["DATE_OUT"]] - results_final$data[["DATE_IN"]])
@@ -570,6 +573,11 @@ shinyServer(function(input, output, session) {
      results_final$data[["FINAL DR.ERROR \n [µGy/a]" ]] <- ((results_final$data[["DOSE_CORR \n [µGy]"]] * 365.25) /
                                                               as.numeric(results_final$data[["DURATION \n [days]"]])) *
         results_final$data[["DOSE_CORR.ERROR \n [µGy]"]] /  results_final$data[["DOSE_CORR \n [µGy]"]]
+
+
+     ##Replace all Inf values with 0
+     results_final$data[["FINAL DR \n [µGy/a]"]][is.infinite(results_final$data[["FINAL DR \n [µGy/a]"]])] <- 0
+     results_final$data[["FINAL DR.ERROR \n [µGy/a]" ]][is.infinite(  results_final$data[["FINAL DR.ERROR \n [µGy/a]"]])] <- 0
 
      ##create table output
      output$postprocessing_results <- renderRHandsontable({

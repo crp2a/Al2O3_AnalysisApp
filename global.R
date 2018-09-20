@@ -152,16 +152,17 @@ verification_hash <- "c2bba3c97909e573a3f7b25dad61380d"
 ##++++++++++++++++++
 .plot_carousel <<- function(positions = NULL, wheel = NULL, included = NULL){
 
+
   ##pre-calculation
   arc.step <- (2 * pi) / 40
   step <- 0
 
-  ##set colour
+  ##set initial colour
   col_positions <- rep("grey", 40)
 
   if(!is.null(included)){
-    col_positions[which(included)] <- rgb(0, 0.8, 0.2, 1)
-    col_positions[which(!included)] <- rgb(1, 0, 0, 1)
+    col_positions[positions[which(included)]] <- rgb(0, 0.8, 0.2, 1)
+    col_positions[positions[which(!included)]] <- rgb(1, 0, 0, 1)
 
 
   }
