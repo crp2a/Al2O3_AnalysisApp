@@ -227,7 +227,7 @@ shinyServer(function(input, output, session) {
           analyse_Al2O3C_Measurement(
             object = file_data,
             travel_dosimeter = if(!is.null(travel_dosimeters)){
-              sample_info_full$data[["POSITION"]][travel_dosimeters]
+              sample_info_full$data[["POSITION"]][sample_info_full$data[["INCLUDE"]]][travel_dosimeters]
               } else {NULL},
             signal_integral = input$settings_signal_integral,
             irradiation_time_correction = results_ITC,
@@ -251,6 +251,7 @@ shinyServer(function(input, output, session) {
           sample_info_full$data[sample_info_full$data[["INCLUDE"]],-c(6,7)],
           REJECT = FALSE,
           results@data$data[,c(1,2)])
+
 
       ##correct for the travel dosimeter
       if(!is.null(results@data[["data_TDcorrected"]])){
