@@ -54,7 +54,7 @@ shinyUI(
             label = "Available calibration datasets",
             choices = basename(calibration_data)),
           wellPanel(
-            div(textOutput("sourceDR_FINAL"),
+            div(strong(textOutput("sourceDR_FINAL_today")), textOutput("sourceDR_FINAL"),
               align = "center"
             )
           )
@@ -81,11 +81,11 @@ shinyUI(
         div(
           actionButton("Analysis.run", icon("play-circle"),
                        "(Re) Run analysis ...", icon = NULL, width = NULL,
-                       style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
+                       style = "color: #fff; background-color: #337ab7; border-color: #2e6da4"),
           align = "center"
         ),
         br(),
-        tags$div(title="Download combined results as returned by the R function analyse_Al2O3C_Measurements().",
+        tags$div(title = "Download combined results as returned by the R function analyse_Al2O3C_Measurements().",
           uiOutput("export_analysis_results"),
           align = "center"
         ),
@@ -209,7 +209,7 @@ shinyUI(
                  "<i class='fa fa-times-circle'></i>"
                },
                "</ul>")),
-    HTML(paste("<b>Data verification hash</b><br> md5:  ", verification_hash)),
+    HTML(paste("<b>Allowed md5 data verification hash values</b><br> ", paste(verification_hash, collapse = "<br>"))),
     helpText(HTML("The verification hash was generated from a reference data structure the time this app was created<br>
                   to ensure that only measurement data that can be analysed by this app are imported.<br>
                   The hash is hard coded and cannot be changed.

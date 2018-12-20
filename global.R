@@ -57,7 +57,7 @@ df <- NULL
 df_reactive <- NULL
 verify <- TRUE
 dosimeter_type <- c("field", "travel")
-verification_hash <- "c2bba3c97909e573a3f7b25dad61380d"
+verification_hash <- c("c2bba3c97909e573a3f7b25dad61380d", "9d6657ac360ac62b123f45737fe07b43")
 
 
 
@@ -85,7 +85,7 @@ verification_hash <- "c2bba3c97909e573a3f7b25dad61380d"
 
     ##verify file data and kick out the rest
     verify <<- vapply(file_data, function(v) {
-      digest::digest(names(v), algo = "md5") == "c2bba3c97909e573a3f7b25dad61380d"
+      any(digest::digest(names(v), algo = "md5") %in% verification_hash)
     }, logical(1))
 
     ##kick out what do not belong into the dataset

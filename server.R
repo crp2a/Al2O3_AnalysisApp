@@ -172,9 +172,13 @@ shinyServer(function(input, output, session) {
 
       ##render text
       output$sourceDR_FINAL <- renderText({
-          paste0("DR today: ", round(DR_today[[1]],2), " ± ",  round(DR_today[[2]],2), " µGy/s \n",
-            "(", sourceDR_FINAL[["CAL_DATE"]],": ",round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2)," ",
+          paste0("(", sourceDR_FINAL[["CAL_DATE"]],": ",round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2)," ",
                 sourceDR_FINAL[[3]],")")
+      })
+
+      output$sourceDR_FINAL_today <- renderText({
+        paste0("DR today: ", round(DR_today[[1]],2), " ± ",  round(DR_today[[2]],2), " µGy/s")
+
       })
 
     }else{
