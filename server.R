@@ -166,14 +166,14 @@ shinyServer(function(input, output, session) {
     if(!is.null(sourceDR_FINAL)){
       DR_today <- calc_SourceDoseRate(
         measurement.date = Sys.Date(),
-        calib.date = sourceDR_FINAL[[5]],
+        calib.date = sourceDR_FINAL[["CAL_DATE"]],
         calib.dose.rate = sourceDR_FINAL[[1]],
         calib.error = sourceDR_FINAL[[2]])$dose.rate
 
       ##render text
       output$sourceDR_FINAL <- renderText({
           paste0("DR today: ", round(DR_today[[1]],2), " ± ",  round(DR_today[[2]],2), " µGy/s \n",
-            "(", sourceDR_FINAL[[5]],": ",round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2)," ",
+            "(", sourceDR_FINAL[["CAL_DATE"]],": ",round(sourceDR_FINAL[[1]],2), " ± ", round(sourceDR_FINAL[[2]],2)," ",
                 sourceDR_FINAL[[3]],")")
       })
 
