@@ -1,6 +1,10 @@
 ## News and changes
 
-###Version 0.1.4 (2018-09-20)
+### Version 0.1.5 (2018-12-20)
+
+* Add current and calibration dose rate disply in tab 'Analyse'
+
+### Version 0.1.4 (2018-09-20)
 * If the position numbering did not start with position 1, this was not displayed correctly on the carousel plot and the travel dosimeter correction did not work; fixed.
 * The sample names in the boxplot are now displayed with a 45˚ angle to avoid overplotting.
 * The auto-generated sample ids used the position numbers, but without a leading 0. This caused some re-ordering of the samples in the last panel; fixed. 
