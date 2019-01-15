@@ -1,5 +1,10 @@
 ## News and changes
 
+### Version 0.1.6 (2019-01-15)
+* Patch to support table sorting in the panel 'Analyse' without screwing up the plots
+* The dose value in the plots in the subtext in the panel 
+'Analyse' was not shown correctly; fixed. 
+
 ### Version 0.1.5 (2018-12-20)
 
 * Add current and calibration dose rate disply in tab 'Analyse'

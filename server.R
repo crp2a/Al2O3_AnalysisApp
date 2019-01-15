@@ -149,7 +149,7 @@ shinyServer(function(input, output, session) {
   })
 
 
-  # PANEL Analysis ------------------------------------------------------------------------------
+  # PANEL Analyse ------------------------------------------------------------------------------
 
   ##=============================##
   ##Calibration dataset selection
@@ -225,6 +225,12 @@ shinyServer(function(input, output, session) {
               Luminescence::analyse_Al2O3C_Measurement(
                 object = file_data[[i]],
                 signal_integral = input$settings_signal_integral,
+                irradiation_time_correction = results_ITC,
+                cross_talk_correction = if(input$settings_cross_talk_correction){
+                  results_CT
+                }else{
+                  NULL
+                },
                 plot = TRUE,
                 verbose = FALSE
                 )
@@ -296,14 +302,16 @@ shinyServer(function(input, output, session) {
                        }")))) %>%
             hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE) %>%
             hot_heatmap(cols = 8) %>%
-            hot_cols(columnSorting = FALSE) %>%
+            hot_cols(columnSorting = TRUE) %>%
             hot_col("REJECT", readOnly = FALSE)
 
 
         })
 
         ##add infotext
-        output$analysis_table_info_text <- renderText("Note: Dose values are here listed in seconds, not µGy! To reject data permanently, go back to the 'Import' panel")
+        output$analysis_table_info_text <- renderText(
+          "Note: Dose values are here listed in seconds, not µGy! To reject data permanently,
+          go back to the 'Import' panel")
 
         ##show first graphic (otherwise it remains empty here, which is odd)
         output$analysis_results.plot <- renderImage({
@@ -316,7 +324,7 @@ shinyServer(function(input, output, session) {
 
         ##add download button if results are available
         output$export_analysis_results <- renderUI({
-          if(length(results)>0)
+          if(length(results) > 0)
             downloadButton(
               outputId = "download_analysis_results",
               label = "Download results")
@@ -379,8 +387,10 @@ shinyServer(function(input, output, session) {
    observeEvent(input$analysis_results_select, {
      output$analysis_results.plot <- renderImage({
 
-       ##grep correct aliquot
-       temp_aliquot <- paste0("ALQ_",df[["ALQ"]][input$analysis_results_select$select$r],".png")
+       ##grep correct aliquot; based on the row number
+       print(input$analysis_results_select$select$rAll[1])
+       temp_aliquot <- paste0(
+         "ALQ_",df[["ALQ"]][input$analysis_results_select$select$rAll[1]],".png")
 
        ##set filename
        filename <- temp_files[[grep(pattern = temp_aliquot, x = temp_files,fixed = TRUE)]]
