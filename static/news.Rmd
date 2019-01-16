@@ -1,9 +1,17 @@
 ## News and changes
 
 ### Version 0.1.6 (2019-01-15)
-* Patch to support table sorting in the panel 'Analyse' without screwing up the plots
+
+#### New features
+* Support table sorting in the panel 'Analyse' without screwing up the plots
+* Add additional columns in the panel 'Post-processing'
+* The table in the panel 'Post-processing' is now active and plots whatever is provided
+
+#### Bugfixes
 * The dose value in the plots in the subtext in the panel 
-'Analyse' was not shown correctly; fixed. 
+'Analyse' was not shown correctly; fixed. '
+* The cosmic dose was not subtracted correclty; fixed.
+
 
 ### Version 0.1.5 (2018-12-20)
 

@@ -319,7 +319,7 @@ shinyServer(function(input, output, session) {
 
           #Return a list containing the filename and alt text
           list(src = filename,
-               alt = paste("Image number", input$analysis_results_select$select$r))
+               alt = paste("Image number", input$analysis_results_select$select$rAll[1]))
         }, deleteFile = FALSE)
 
         ##add download button if results are available
@@ -388,7 +388,6 @@ shinyServer(function(input, output, session) {
      output$analysis_results.plot <- renderImage({
 
        ##grep correct aliquot; based on the row number
-       print(input$analysis_results_select$select$rAll[1])
        temp_aliquot <- paste0(
          "ALQ_",df[["ALQ"]][input$analysis_results_select$select$rAll[1]],".png")
 
@@ -585,7 +584,6 @@ shinyServer(function(input, output, session) {
    ##update post-processing table
    observeEvent(input$post_processing_update, {
 
-
      ##update DURATION
      results_final$data[["DURATION \n [days]"]] <-  as.integer(
        results_final$data[["DATE_OUT"]] - results_final$data[["DATE_IN"]])
@@ -652,6 +650,26 @@ shinyServer(function(input, output, session) {
          hot_cols(columnSorting = TRUE)
 
     })
+
+   })
+
+   ##update ggplot with whatever we have
+   observeEvent(input$postprocessing_results_select, {
+     df_hot <- as.data.frame(hot_to_r(input$postprocessing_results), stringsAsFactors = FALSE)
+     output$postprocessing_boxplot <- renderPlot({
+       ggplot(data = df_hot,
+              aes(x = as.factor(df_hot$SAMPLE_ID),
+                  y = df_hot[[input$postprocessing_results_select$select$c]],
+                  col = SAMPLE_ID)) +
+         geom_boxplot() +
+         xlab("SAMPLE ID") +
+         ylab(colnames(df_hot)[input$postprocessing_results_select$select$c]) +
+         ggtitle("Alternative") +
+         theme_gray(base_size = 14) +
+         theme(axis.text.x = element_text(angle = 45, hjust = 1))
+     }, width = 800)
+
+
 
    })
 
