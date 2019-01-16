@@ -301,7 +301,6 @@ shinyServer(function(input, output, session) {
                          document.body.removeChild(link);
                        }")))) %>%
             hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit = FALSE) %>%
-            hot_heatmap(cols = 8) %>%
             hot_cols(columnSorting = TRUE) %>%
             hot_col("REJECT", readOnly = FALSE)
 
@@ -561,7 +560,7 @@ shinyServer(function(input, output, session) {
            hot_col(col = 15, readOnly = FALSE) %>%
            hot_col(col = 17, readOnly = FALSE) %>%
            hot_table(allowRowEdit = FALSE, highlightCol = TRUE, highlightRow = TRUE) %>%
-           hot_cols(columnSorting = TRUE)
+           hot_cols(columnSorting = FALSE)
 
        })
 
@@ -647,7 +646,7 @@ shinyServer(function(input, output, session) {
          hot_col(col = 15, readOnly = FALSE) %>%
          hot_col(col = 17, readOnly = FALSE) %>%
          hot_table(allowRowEdit = FALSE, highlightCol = TRUE, highlightRow = TRUE) %>%
-         hot_cols(columnSorting = TRUE)
+         hot_cols(columnSorting = FALSE)
 
     })
 

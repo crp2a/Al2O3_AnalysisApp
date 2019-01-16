@@ -1,5 +1,12 @@
 ## News and changes
 
+### Verison 0.1.7 (2019-01-16)
+
+#### Bugfixes and changes
+* Colour ramp removed in table in panel 'Analyse'
+* Colour sorting in 'Post-processing' now deactivated to avoid confusions 
+
+
 ### Version 0.1.6 (2019-01-15)
 
 #### New features

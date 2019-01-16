@@ -119,7 +119,7 @@ shinyUI(
               br(),
               br(),
               textOutput("analysis_table_info_text"),
-              rHandsontableOutput("analysis_results", height = 600, width = 1000)
+              rHandsontableOutput("analysis_results", height = 600, width = 1200)
           )
          )
       )#mainPanel
