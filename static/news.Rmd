@@ -1,6 +1,13 @@
 ## News and changes
 
-### Verison 0.1.7 (2019-01-16)
+### Version 0.1.8 (2019-04-05)
+#### Bugfixes and changes
+
+#### User visible changes
+* Panel 'Post-processing' the data aggregation runs automatically if the panel is selected, 
+i.e. the button 'Aggregate data' was removed.
+
+### Version 0.1.7 (2019-01-16)
 
 #### Bugfixes and changes
 * Colour ramp removed in table in panel 'Analyse'

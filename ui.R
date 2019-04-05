@@ -7,6 +7,7 @@
 shinyUI(
  navbarPage(
    title = HTML(paste0("Al<sub>2</sub>O<sub>3</sub>:C Analysis App")),
+   id = "navbar",
    windowTitle = "Al2O3:C Analysis App",
    footer = HTML("<hr><div align = 'center'><small>This software comes WITHOUT ANY WARRANTY.</small></div>"),
 
@@ -129,21 +130,20 @@ shinyUI(
 
 
   # PANEL - Post-processing------------------------------------------------------------------------
-  tabPanel("Post-processing",
+  tabPanel(title = "Post-processing",
+           value = "post_processing_run",
            ##=========================================SIDEBAR=====================================##
            sidebarLayout(
              sidebarPanel(
                fluidRow(
                  column(12,
-                   div(
-                    actionButton("Post-processing.run", icon("filter"),
-                               "Aggregate data ...", icon = NULL, width = NULL,
-                               style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
-
-                 align = "center"),
-                 br(),
                  div(
-                  uiOutput("post_processing_update"),
+                   actionButton(
+                     inputId = "post_processing_update",
+                     label = "Update table",
+                     style="color: #fff; background-color: #337ab7; border-color: #2e6da4",
+                     icon = icon("refresh", lib = "glyphicon")
+                   ),
                   align = "center"
                  )
                 )

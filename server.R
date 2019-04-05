@@ -403,7 +403,7 @@ shinyServer(function(input, output, session) {
 
 
   # PANEL Post-processing -------------------------------------------------------------------------
-   observeEvent(input$`Post-processing.run`,{
+   observeEvent(input$navbar == "post_processing_run",{
 
      #preset error message
      outputpost_processing_error <- renderText(NULL)
@@ -411,7 +411,8 @@ shinyServer(function(input, output, session) {
      if(!is.null(df_reactive$data)){
 
        ##add infotext
-       output$post_processing_table_info_text <- renderText("Sample summary | Source dose rate re-calculated to measurement date.")
+       output$post_processing_table_info_text <- renderText(
+         "Sample summary | Source dose rate re-calculated to measurement date.")
 
        ##group by sample ID
        df_grouped <- dlply(
@@ -508,16 +509,6 @@ shinyServer(function(input, output, session) {
           "FINAL GAMMA_DR.ERROR \n [µGy/a]",
           "FINAL GAMMA_DR.ERROR \n [%]"
           )
-
-        ##add new ui to add a new 'update' button
-        output$post_processing_update <- renderUI({
-          actionButton(
-            inputId = "post_processing_update",
-            label = "Update table",
-            icon("refresh", lib = "glyphicon")
-            )
-
-        })
 
        ##create output plot
        ##boxplot
