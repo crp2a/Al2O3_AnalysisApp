@@ -440,7 +440,7 @@ shinyServer(function(input, output, session) {
                     stringsAsFactors = FALSE)
 
        ##calculate relative error
-       df_grouped <- cbind(df_grouped, CV = df_grouped[[3]]/df_grouped[[2]])
+       df_grouped <- cbind(df_grouped, CV = abs(df_grouped[["SD"]]/df_grouped[["MEAN"]] * 100))
 
        # ##translate to µGy
        if(!is.null(sourceDR_FINAL)){
@@ -491,23 +491,12 @@ shinyServer(function(input, output, session) {
 
         ##make sure that the sample headers are ok
         colnames(results_final$data) <- c(
-          "SAMPLE_ID", "N", "SAMPLE MEAN \n [s]", "SAMPLE SD \n [s]", "CV \n [%]",
-          "DATE \n MEASUREMENT",
-          "SOURCE_DR \n [µGy/s]",
-          "SOURCE_DR.ERROR \n [µGy/s]", "DOSE \n [µGy]", "DOSE.ERROR \n [µGy]", "DATE_IN", "DATE_OUT",
-          "DURATION \n [days]",
-          "COSMIC_DR \n [µGy/a]",
-          "COSMIC_DR.ERROR \n [µGy/a]",
-          "COSMIC_DOSE \n [µGy]",
-          "COSMIC_DOSE.ERROR \n [µGy]",
-          "TUBE ATTENUATION \n CORRECTION FACTOR",
-          "DOSE_CORR \n [µGy]",
-          "DOSE_CORR.ERROR \n [µGy]",
-          "FINAL DR \n [µGy/a]",
-          "FINAL DR.ERROR \n [µGy/a]",
-          "FINAL GAMMA_DR \n [µGy/a]",
-          "FINAL GAMMA_DR.ERROR \n [µGy/a]",
-          "FINAL GAMMA_DR.ERROR \n [%]"
+          "SAMPLE_ID", "N", "SAMPLE MEAN \n [s]", "SAMPLE SD \n [s]", "CV \n [%]", "DATE \n MEASUREMENT",
+          "SOURCE_DR \n [µGy/s]", "SOURCE_DR.ERROR \n [µGy/s]", "DOSE \n [µGy]", "DOSE.ERROR \n [µGy]",
+          "DATE_IN", "DATE_OUT", "DURATION \n [days]", "COSMIC_DR \n [µGy/a]", "COSMIC_DR.ERROR \n [µGy/a]",
+          "COSMIC_DOSE \n [µGy]", "COSMIC_DOSE.ERROR \n [µGy]", "TUBE ATTENUATION \n CORRECTION FACTOR",
+          "DOSE_CORR \n [µGy]", "DOSE_CORR.ERROR \n [µGy]", "FINAL DR \n [µGy/a]", "FINAL DR.ERROR \n [µGy/a]",
+          "FINAL GAMMA_DR \n [µGy/a]", "FINAL GAMMA_DR.ERROR \n [µGy/a]", "FINAL GAMMA_DR.ERROR \n [%]"
           )
 
        ##create output plot

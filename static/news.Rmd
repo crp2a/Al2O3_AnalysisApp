@@ -2,6 +2,7 @@
 
 ### Version 0.1.8 (2019-04-05)
 #### Bugfixes and changes
+* Panel 'Post-processing': Column 'CV %' was not correct
 
 #### User visible changes
 * Panel 'Post-processing' the data aggregation runs automatically if the panel is selected, 
