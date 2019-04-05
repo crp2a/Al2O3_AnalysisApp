@@ -192,7 +192,6 @@ shinyServer(function(input, output, session) {
   ##run analysis
   ##=============================##
   observeEvent(input$Analysis.run, {
-
       #preset error message
       output$analysis_error <- renderText(NULL)
 
@@ -595,8 +594,8 @@ shinyServer(function(input, output, session) {
      ##calculate final gamma dose rate
      results_final$data[["FINAL GAMMA_DR \n [µGy/a]"]] <- results_final$data[["FINAL DR \n [µGy/a]"]] - results_final$data[["COSMIC_DR \n [µGy/a]"]]
      results_final$data[["FINAL GAMMA_DR.ERROR \n [µGy/a]"]] <- sqrt(results_final$data[["FINAL DR.ERROR \n [µGy/a]"]]^2 * results_final$data[["COSMIC_DR.ERROR \n [µGy/a]"]]^2)
-     results_final$data[["FINAL GAMMA_DR.ERROR \n [%]"]] <- results_final$data[["FINAL GAMMA_DR.ERROR \n [µGy/a]"]] /
-       results_final$data[["FINAL GAMMA_DR \n [µGy/a]"]] * 100
+     results_final$data[["FINAL GAMMA_DR.ERROR \n [%]"]] <- abs(results_final$data[["FINAL GAMMA_DR.ERROR \n [µGy/a]"]] /
+       results_final$data[["FINAL GAMMA_DR \n [µGy/a]"]] * 100)
 
 
      ##create table output
