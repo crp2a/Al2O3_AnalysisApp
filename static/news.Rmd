@@ -1,5 +1,9 @@
 ## News and changes
 
+### Version 0.1.9 (2019-04-08)
+#### Bugfixes and changes
+* Panel 'Post-processing': Column 'FINAL GAMMA_DR.ERROR [µGy/a]' was not correctly calculated; corrected.
+
 ### Version 0.1.8 (2019-04-05)
 #### Bugfixes and changes
 * Panel 'Post-processing': Column 'CV %' was not correct
