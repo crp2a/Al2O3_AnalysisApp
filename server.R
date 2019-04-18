@@ -402,13 +402,13 @@ shinyServer(function(input, output, session) {
 
 
   # PANEL Post-processing -------------------------------------------------------------------------
-   observeEvent(input$navbar == "post_processing_run",{
+  observeEvent(input$navbar,{
 
-     #preset error message
-     outputpost_processing_error <- renderText(NULL)
+    if(input$navbar == "post_processing_run"){
+     ##reset error message
+     output$post_processing_error <- renderText(NULL)
 
      if(!is.null(df_reactive$data)){
-
        ##add infotext
        output$post_processing_table_info_text <- renderText(
          "Sample summary | Source dose rate re-calculated to measurement date.")
@@ -501,11 +501,15 @@ shinyServer(function(input, output, session) {
        ##create output plot
        ##boxplot
        output$postprocessing_boxplot <- renderPlot({
-       ggplot(data = df_reactive$data[!df_reactive$data[["REJECT"]],],
-              aes(x = as.factor(SAMPLE_ID), y = DE * source_dose_rate[,1], col = SAMPLE_ID)) +
-         geom_boxplot() +
-         xlab("SAMPLE ID") +
-         ylab(expression(paste(D[e], " [µGy]"))) +
+       ggplot(data = results_final$data,
+              aes(x = SAMPLE_ID, y = `DOSE \n [µGy]`, col = SAMPLE_ID)) +
+         geom_point() +
+         geom_segment(
+           aes(
+             x = SAMPLE_ID, xend = SAMPLE_ID,
+             y = `DOSE \n [µGy]` - `DOSE.ERROR \n [µGy]`,
+             yend = `DOSE \n [µGy]` + `DOSE.ERROR \n [µGy]`,
+             col = SAMPLE_ID)) +
          ggtitle("Totally Absorbed Dose") +
          theme_gray(base_size = 14) +
          theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -514,8 +518,8 @@ shinyServer(function(input, output, session) {
 
        ##create table output
        output$postprocessing_results <- renderRHandsontable({
-         rownames(results_final$data) <- 1:nrow(results_final$data)
-         rhandsontable(data = results_final$data, readOnly = TRUE, selectCallback = TRUE) %>%
+         rownames(results_final$data) <- results_final$data$SAMPLE_ID
+         rhandsontable(data = results_final$data, readOnly = TRUE, selectCallback = TRUE, rowHeaderWidth = 150) %>%
            hot_context_menu(
              allowRowEdit = FALSE,
              allowColEdit = FALSE,
@@ -547,6 +551,7 @@ shinyServer(function(input, output, session) {
        output$post_processing_error <- renderText("Error: No data to aggregate!")
 
      }
+    }#end if navbar selection
 
    })#observeEvent Post-processing
 
@@ -631,18 +636,29 @@ shinyServer(function(input, output, session) {
 
    })
 
-   ##update ggplot with whatever we have
+   ##update ggplot with whatever we have to
    observeEvent(input$postprocessing_results_select, {
      df_hot <- as.data.frame(hot_to_r(input$postprocessing_results), stringsAsFactors = FALSE)
+     ##set selection
+     if(length(input$postprocessing_results_select$select$cAll) == 1){
+       x_sel <- 1
+       y_sel <- min(input$postprocessing_results_select$select$cAll)
+
+     }else{
+       x_sel <- min(input$postprocessing_results_select$select$cAll)
+       y_sel <- max(input$postprocessing_results_select$select$cAll)
+     }
+
      output$postprocessing_boxplot <- renderPlot({
        ggplot(data = df_hot,
-              aes(x = as.factor(df_hot$SAMPLE_ID),
-                  y = df_hot[[input$postprocessing_results_select$select$c]],
-                  col = SAMPLE_ID)) +
-         geom_boxplot() +
-         xlab("SAMPLE ID") +
-         ylab(colnames(df_hot)[input$postprocessing_results_select$select$c]) +
-         ggtitle("Alternative") +
+              aes(
+                x = df_hot[[x_sel]],
+                y = df_hot[[y_sel]],
+                col = SAMPLE_ID)) +
+         geom_point() +
+         xlab(colnames(df_hot)[x_sel]) +
+         ylab(colnames(df_hot)[y_sel]) +
+         ggtitle("Alternative plot") +
          theme_gray(base_size = 14) +
          theme(axis.text.x = element_text(angle = 45, hjust = 1))
      }, width = 800)

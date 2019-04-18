@@ -4,6 +4,9 @@
 #### Bugfixes and changes
 * The signal integral was not used correctly, resulting in results different from what would 
 be calculated using the R function alone
+* Panel 'Post-processing': the plot output is now more meaningful and allows bivariate plots if
+more then one column is selected
+* Panel 'Settings': housekeeping and minor error correction
 
 ### Version 0.1.9 (2019-04-08)
 #### Bugfixes and changes
