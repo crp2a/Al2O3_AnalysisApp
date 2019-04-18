@@ -156,7 +156,7 @@ shinyServer(function(input, output, session) {
   ##=============================##
   observeEvent(input$calibration_data,{
     ##load calibration dataset
-    if(!"Own dataset loaded" %in% unlist(input$calibration_data)){
+    if(!"Own dataset loaded" %in% unlist(input$calibration_data) && input$calibration_data != "not available" ){
     load(calibration_data[[grep(pattern = input$calibration_data,
                                 x = calibration_data,
                                 fixed = TRUE)]], envir = current_env)
