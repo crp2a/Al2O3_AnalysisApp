@@ -223,7 +223,7 @@ shinyServer(function(input, output, session) {
             png(file = temp_files[[i]], bg = "transparent", width = 700, height = 400)
               Luminescence::analyse_Al2O3C_Measurement(
                 object = file_data[[i]],
-                signal_integral = input$settings_signal_integral,
+                signal_integral = min(input$settings_signal_integral):max(input$settings_signal_integral),
                 irradiation_time_correction = results_ITC,
                 cross_talk_correction = if(input$settings_cross_talk_correction){
                   results_CT
@@ -245,7 +245,7 @@ shinyServer(function(input, output, session) {
             travel_dosimeter = if(!is.null(travel_dosimeters)){
               sample_info_full$data[["POSITION"]][sample_info_full$data[["INCLUDE"]]][travel_dosimeters]
               } else {NULL},
-            signal_integral = input$settings_signal_integral,
+            signal_integral = min(input$settings_signal_integral):max(input$settings_signal_integral),
             irradiation_time_correction = results_ITC,
             cross_talk_correction = if(input$settings_cross_talk_correction){
               results_CT
