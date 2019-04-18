@@ -174,10 +174,10 @@ shinyUI(
   # PANEL Settings ------------------------------------------------------------------------------
   tabPanel("Settings",
     bookmarkButton("Bookmark this session (beta)"),
-    downloadButton("download_CalibrationData",label = "Download calibration data", icon = "download"),
     br(),
-    h4("Session information"),
-    HTML(paste0("<b>Loaded R packages</b><br>",
+    h3("Session information"),
+    h4("Loaded R packages"),
+    HTML(paste0(
          "&nbsp; + 'Luminescence' (v", packageDescription('Luminescence')$Version,")<br>",
          "&nbsp; + 'shiny' (v", packageDescription('shiny')$Version,")<br>",
          "&nbsp; + 'shinyjs' (v", packageDescription('shinyjs')$Version,")<br>",
@@ -189,33 +189,19 @@ shinyUI(
          "&nbsp; + 'digest' (v", packageDescription('digest')$Version,")<br>"
 
     )),
-    HTML(paste("<br><b>Initially available R objects</b><br><ul>",
-               "<li>results_CT&nbsp;",
-               if (!is.null("results_CT")) {
-                 "<i class='fa fa-check-circle'></i>"
-               } else{
-                 "<i class='fa fa-times-circle'></i>"
-               },
-               "<li>results_ITC&nbsp;",
-               if (!is.null("results_ITC")) {
-                 "<i class='fa fa-check-circle'></i>"
-               } else{
-                 "<i class='fa fa-times-circle'></i>"
-               },
-               "<li>sourceDR_FINAL&nbsp;",
-               if (!is.null("sourceDR_FINAL")) {
-                 "<i class='fa fa-check-circle'></i>"
-               } else{
-                 "<i class='fa fa-times-circle'></i>"
-               },
-               "</ul>")),
-    HTML(paste("<b>Allowed md5 data verification hash values</b><br> ", paste(verification_hash, collapse = "<br>"))),
+    h4("Available calibration datasets"),
+    HTML(paste0("&nbsp; + ", basename(calibration_data), "<br>")),
+    br(),
+    downloadButton("download_CalibrationData",label = "Download calibration datasets", icon = "download"),
+
+    h4("Allowed md5 data verification hash values"),
+    HTML(paste0(verification_hash, collapse = "<br>")),
     helpText(HTML("The verification hash was generated from a reference data structure the time this app was created<br>
                   to ensure that only measurement data that can be analysed by this app are imported.<br>
                   The hash is hard coded and cannot be changed.
                   ")),
     hr(),
-    h4("Dangerous zone"),
+    h4(icon("warning-sign", lib = "glyphicon"), "Dangerous zone"),
     fileInput("upload_calibrationdata", accept = "*.Rdata", label = "Upload own calibration dataset"),
     helpText(HTML("
       The '.Rdata' file must contain the objects <br>
