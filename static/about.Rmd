@@ -2,7 +2,8 @@
 
 This software was developed for the IRAMAT-CRP2A, Université Bordeaux Montaigne (France)
 to analyse Al<sub>2</sub>O<sub>3</sub>:C chip measurements. The analysis assumed that the measurements
-were solely carried out as described in Kreutzer et al. (2018). For all calculations functions from the R package 'Luminescence' are used. 
+were solely carried out as described in Kreutzer et al. (2018). 
+For all calculations functions from the R package 'Luminescence' are used. 
 
 **Version**: 0.1.10 [2019-04-18]
 
@@ -30,3 +31,7 @@ Free Software Foundation, either version 3 of the License, or any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 See the GNU [General Public License](https://www.gnu.org/licenses/gpl-3.0.en.html) for more details
+
+## <span class="glyphicon glyphicon-euro"></span> Funding
+
+The development of this application was supported by LabEx LaScArBx (ANR - n˚ ANR-10-LABX-52).
