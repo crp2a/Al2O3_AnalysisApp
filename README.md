@@ -1,6 +1,6 @@
 # Al<sub>2</sub>O<sub>3</sub>:C Analysis App
 
-The 'Al2O3:C Analysis App' is a [Shiny](http://shiny.rstudio.com) application providing an exhanced graphical user interface to the function `analyse_Al2O3C_Measurement()` from the **R** package ['Luminescence'](https://CRAN.R-project.org/package=Luminescence). 
+The 'Al2O3:C Analysis App' is a [Shiny](https://shiny.rstudio.com) application providing an exhanced graphical user interface to the function `analyse_Al2O3C_Measurement()` from the **R** package ['Luminescence'](https://CRAN.R-project.org/package=Luminescence). 
 
 ## Impressions
 
@@ -11,7 +11,6 @@ The 'Al2O3:C Analysis App' is a [Shiny](http://shiny.rstudio.com) application pr
 ### Requirements
 
 This app needs the R package ['Luminescence'](https://CRAN.R-project.org/package=Luminescence) in version 0.9.0 or newer. 
-Developement versions of the package 'Luminescence' are also available via [GitHub](https://github.com/R-Lum/Luminescence).
 
 ### Installation
 
@@ -31,3 +30,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 [GNU General Public License](https://github.com/RLumSK/Al2O3_AnalysisApp/blob/master/LICENSE) 
 for more details.
 
+## <span class="glyphicon glyphicon-euro"></span> Funding
+
+The development of this application was supported by LabEx LaScArBx (ANR - n˚ ANR-10-LABX-52).
