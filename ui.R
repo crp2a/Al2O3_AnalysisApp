@@ -192,7 +192,7 @@ shinyUI(
     h4("Available calibration datasets"),
     HTML(paste0("&nbsp; + ", basename(calibration_data), "<br>")),
     br(),
-    downloadButton("download_CalibrationData",label = "Download calibration datasets", icon = "download"),
+    downloadButton("download_CalibrationData", label = "Download calibration datasets"),
 
     h4("Allowed md5 data verification hash values"),
     HTML(paste0(verification_hash, collapse = "<br>")),

@@ -1,5 +1,9 @@
 ## News and changes
 
+### Version 0.1.11 (2021-04-17)
+#### Bugfixes and changes
+* Fix a problem that prevented the app running with a updated version of 'shiny'
+
 ### Version 0.1.10 (2019-04-18)
 #### Bugfixes and changes
 * The signal integral was not used correctly, resulting in results different from what would 
