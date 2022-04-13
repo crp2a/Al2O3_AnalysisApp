@@ -58,7 +58,10 @@ df <- NULL
 df_reactive <- NULL
 verify <- TRUE
 dosimeter_type <- c("field", "travel")
-verification_hash <- c("c2bba3c97909e573a3f7b25dad61380d", "9d6657ac360ac62b123f45737fe07b43")
+verification_hash <- c(
+  "c2bba3c97909e573a3f7b25dad61380d",
+  "9d6657ac360ac62b123f45737fe07b43",
+  "90a0b766b152243abab71c7e9a676828")
 
 
 
@@ -73,16 +76,14 @@ verification_hash <- c("c2bba3c97909e573a3f7b25dad61380d", "9d6657ac360ac62b123f
   file_data <<- read_XSYG2R(
     file = file,
     fastForward = TRUE,
-    verbose = FALSE
-  )
+    verbose = FALSE)
 
   ##import info
   file_info <<- read_XSYG2R(
     file = file,
     fastForward = TRUE,
     verbose = FALSE,
-    import = FALSE
-  )
+    import = FALSE)
 
     ##verify file data and kick out the rest
     verify <<- vapply(file_data, function(v) {

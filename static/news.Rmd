@@ -1,5 +1,10 @@
 ## News and changes
 
+### Version 0.1.12 (2022-04-13)
+#### Bugfixes and changes
+* Fixes a potential problem with the file import due to a missing argument.
+* Add hash-code for a sequence without TL curves.
+
 ### Version 0.1.11 (2021-04-17)
 #### Bugfixes and changes
 * Fix a problem that prevented the app running with a updated version of 'shiny'
