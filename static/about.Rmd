@@ -1,17 +1,17 @@
 ## About this app
 
-This software was developed for the IRAMAT-CRP2A, Université Bordeaux Montaigne (France)
+This software was developed for the Archéosciences Bordeaux (former IRAMAT-CRP2A), Université Bordeaux Montaigne (France)
 to analyse Al<sub>2</sub>O<sub>3</sub>:C chip measurements. The analysis assumed that the measurements
 were solely carried out as described in Kreutzer et al. (2018). 
 For all calculations functions from the R package 'Luminescence' are used. 
 
-**Version**: 0.1.10 [2019-04-18]
+**Version**: 0.1.12 [2022-04-14]
 
-**Author**: Sebastian Kreutzer, IRAMAT-CRP2A, UMR 5060, CNRS - Université Bordeaux Montaigne (France)
+**Author**: Sebastian Kreutzer, Archéosciences Bordeaux, UMR 6034, CNRS - Université Bordeaux Montaigne (France)
 
 **Contact**: sebastian.kreutzer@u-bordeaux-montaigne.fr
 
-**Bug reporting**: [https://github.com/RLumSK/Al2O3_AnalysisApp/issues](https://github.com/RLumSK/Al2O3_AnalysisApp/issues)
+**Bug reporting**: [https://github.com/crp2a/Al2O3_AnalysisApp/issues](https://github.com/crp2a/Al2O3_AnalysisApp/issues)
   
 ## References to cite
 
