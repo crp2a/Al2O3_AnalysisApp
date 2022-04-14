@@ -18,7 +18,7 @@ require(knitr)
 require(digest)
 
 ##Shiny settings
-options(shiny.maxRequestSize=30*1024^2)
+options(shiny.maxRequestSize = 30 * 1024 ^ 2)
 enableBookmarking(store = "server")
 current_env <- environment()
 
@@ -28,7 +28,7 @@ calibration_data <- sort(list.files(path = "calibration_data/", full.names = TRU
   ##load initial set
   ##calibration data
   ##make sure nothing breaks here if no file is available
-  if(length(calibration_data) == 0){
+  if (length(calibration_data) == 0){
     results_CT <- NULL
     results_ITC <- NULL
     sourceDR_FINAL <- NULL
@@ -36,13 +36,11 @@ calibration_data <- sort(list.files(path = "calibration_data/", full.names = TRU
 
   }else{
     ##make sure that the example data is only loaded if needed
-    if(length(calibration_data) > 1){
+    if (length(calibration_data) > 1){
       calibration_data <- calibration_data[
         !grepl(pattern = "Example_Calibration.Rdata", x = calibration_data, fixed = TRUE)]
 
     }
-
-
   }
 
 
@@ -58,12 +56,17 @@ df <- NULL
 df_reactive <- NULL
 verify <- TRUE
 dosimeter_type <- c("field", "travel")
+
+## codes are used to avoid that users upload weird sequences never
+## approved and then complain
+## to create a new valid hash code:
+## temp <- Luminescence::read_XSYG2R(...)
+## digest::digest(names(temp)
+## (if temp is list, type temp[[1]])
 verification_hash <- c(
   "c2bba3c97909e573a3f7b25dad61380d",
   "9d6657ac360ac62b123f45737fe07b43",
   "90a0b766b152243abab71c7e9a676828")
-
-
 
 # Helper functions ----------------------------------------------------------------------------
 

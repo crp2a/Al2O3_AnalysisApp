@@ -2,7 +2,7 @@
 ## Title:   Al2O3:C Analysis App
 ## Authors: Sebastian Kreutzer, IRAMAT-CRP2A, Université Bordeaux Montaigne (France)
 ## Contact: sebastian.kreutzer@u-bordeaux-montainge.fr
-## Initial data:    2018-06-07
+## Initial date:    2018-06-07
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shinyUI(
  navbarPage(
@@ -230,5 +230,4 @@ shinyUI(
   )#About
  )##navbarPage
 )##ShinyUI
-
 
