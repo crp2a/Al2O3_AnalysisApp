@@ -80,7 +80,7 @@ shinyUI(
             value = FALSE)
         ),
         div(
-          actionButton("Analysis.run", icon("play-circle"),
+          actionButton("Analysis.run", icon("circle-play"),
                        "(Re) Run analysis ...", icon = NULL, width = NULL,
                        style = "color: #fff; background-color: #337ab7; border-color: #2e6da4"),
           align = "center"

@@ -1,5 +1,11 @@
 ## News and changes
 
+### Version 0.1.13 (2022-10-20)
+* Add additional column in Post-processing pane to allow a correction of the 
+the source dose rate. This might come in handy of different chips thickness need 
+an adjustment of the dose rate
+* A few minor fixes, silencing terminal warnings (no user visible changes)
+
 ### Version 0.1.12 (2022-04-13)
 #### Bugfixes and changes
 * Fixes a potential problem with the file import due to a missing argument.

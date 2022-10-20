@@ -454,6 +454,7 @@ shinyServer(function(input, output, session) {
            MEASUREMENT_DATE = as.Date(strtrim(file_info$startDate[1],8), format = "%Y%m%d"),
            SOURCE_DR = source_dose_rate[[1]],
            SOURCE_DR.ERROR = source_dose_rate[[2]],
+           SOUREC_DR_CORR = 1,
            DOSE = df_grouped[["MEAN"]] * source_dose_rate[,1],
            DOSE.ERROR = df_grouped[["SD"]] * source_dose_rate[,1]
          ))
@@ -484,7 +485,7 @@ shinyServer(function(input, output, session) {
         ##make sure that the sample headers are ok
         colnames(results_final$data) <- c(
           "SAMPLE_ID", "N", "SAMPLE MEAN \n [s]", "SAMPLE SD \n [s]", "CV \n [%]", "DATE \n MEASUREMENT",
-          "SOURCE_DR \n [µGy/s]", "SOURCE_DR.ERROR \n [µGy/s]", "DOSE \n [µGy]", "DOSE.ERROR \n [µGy]",
+          "SOURCE_DR \n [µGy/s]", "SOURCE_DR.ERROR \n [µGy/s]", "SOURCE_DR_CORR", "DOSE \n [µGy]", "DOSE.ERROR \n [µGy]",
           "DATE_IN", "DATE_OUT", "DURATION \n [days]", "COSMIC_DR \n [µGy/a]", "COSMIC_DR.ERROR \n [µGy/a]",
           "COSMIC_DOSE \n [µGy]", "COSMIC_DOSE.ERROR \n [µGy]", "TUBE ATTENUATION \n CORRECTION FACTOR",
           "DOSE_CORR \n [µGy]", "DOSE_CORR.ERROR \n [µGy]", "FINAL DR \n [µGy/a]", "FINAL DR.ERROR \n [µGy/a]",
@@ -532,9 +533,10 @@ shinyServer(function(input, output, session) {
                        }")))) %>%
            hot_col("DATE_IN", readOnly = FALSE) %>%
            hot_col("DATE_OUT", readOnly = FALSE) %>%
-           hot_col(col = 14, readOnly = FALSE) %>%
-           hot_col(col = 15, readOnly = FALSE) %>%
-           hot_col(col = 17, readOnly = FALSE) %>%
+           hot_col(col = 9, readOnly = FALSE) %>%
+           hot_col(col = 13, readOnly = FALSE) %>%
+           hot_col(col = 16, readOnly = FALSE) %>%
+           hot_col(col = 18, readOnly = FALSE) %>%
            hot_table(allowRowEdit = FALSE, highlightCol = TRUE, highlightRow = TRUE) %>%
            hot_cols(columnSorting = FALSE)
 
@@ -557,6 +559,22 @@ shinyServer(function(input, output, session) {
 
    ##update post-processing table
    observeEvent(input$post_processing_update, {
+
+     ##update source dose rate and corresponding dose
+     ##with the values from the optional correction factor
+
+      ## update source dose rate
+       err <-  results_final$data[["SOURCE_DR.ERROR \n [µGy/s]"]] /results_final$data[["SOURCE_DR \n [µGy/s]"]]
+       results_final$data[["SOURCE_DR \n [µGy/s]"]] <- results_final$data[["SOURCE_DR \n [µGy/s]"]] *
+         results_final$data[["SOURCE_DR_CORR"]]
+       results_final$data[["SOURCE_DR.ERROR \n [µGy/s]"]] <- results_final$data[["SOURCE_DR \n [µGy/s]"]] * err
+
+      ## update dose accordingly
+       results_final$data[["DOSE \n [µGy]"]] <- results_final$data[["SAMPLE MEAN \n [s]"]] *
+         results_final$data[["SOURCE_DR \n [µGy/s]"]]
+       results_final$data[["DOSE.ERROR \n [µGy]"]] <- results_final$data[["SAMPLE SD \n [s]"]] *
+         results_final$data[["SOURCE_DR \n [µGy/s]"]]
+
      ##update DURATION
      results_final$data[["DURATION \n [days]"]] <-  as.integer(
        results_final$data[["DATE_OUT"]] - results_final$data[["DATE_IN"]])
@@ -613,9 +631,10 @@ shinyServer(function(input, output, session) {
                        }")))) %>%
          hot_col("DATE_IN", readOnly = FALSE) %>%
          hot_col("DATE_OUT", readOnly = FALSE) %>%
-         hot_col(col = 14, readOnly = FALSE) %>%
-         hot_col(col = 15, readOnly = FALSE) %>%
-         hot_col(col = 17, readOnly = FALSE) %>%
+         hot_col(col = 9, readOnly = FALSE) %>%
+         hot_col(col = 13, readOnly = FALSE) %>%
+         hot_col(col = 16, readOnly = FALSE) %>%
+         hot_col(col = 18, readOnly = FALSE) %>%
          hot_table(allowRowEdit = FALSE, highlightCol = TRUE, highlightRow = TRUE) %>%
          hot_cols(columnSorting = FALSE)
 
@@ -640,8 +659,8 @@ shinyServer(function(input, output, session) {
      output$postprocessing_boxplot <- renderPlot({
        ggplot(data = df_hot,
               aes(
-                x = df_hot[[x_sel]],
-                y = df_hot[[y_sel]],
+                x = .data[[x_sel]],
+                y = .data[[y_sel]],
                 col = SAMPLE_ID)) +
          geom_point() +
          xlab(colnames(df_hot)[x_sel]) +
