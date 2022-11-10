@@ -1,5 +1,8 @@
 ## News and changes
 
+### Version 0.1.14 (2022-11-10)
+* Do not normalize TL/OSL curves to maximum.
+
 ### Version 0.1.13 (2022-10-20)
 * Add additional column in Post-processing pane to allow a correction of the 
 the source dose rate. This might come in handy of different chips thickness need 
