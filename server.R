@@ -227,7 +227,8 @@ shinyServer(function(input, output, session) {
                   NULL
                 },
                 plot = TRUE,
-                verbose = FALSE
+                verbose = FALSE,
+                norm = FALSE # DO NOT normalize curves to maximum
                 )
             dev.off()
           }
