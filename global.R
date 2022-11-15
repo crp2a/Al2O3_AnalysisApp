@@ -56,6 +56,7 @@ df <- NULL
 df_reactive <- NULL
 verify <- TRUE
 dosimeter_type <- c("field", "travel")
+dosimeter_thickness <- c("normal", "thin")
 
 ## codes are used to avoid that users upload weird sequences never
 ## approved and then complain

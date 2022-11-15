@@ -2,6 +2,7 @@
 
 ### Version 0.1.14 (2022-11-10)
 * Do not normalize TL/OSL curves to maximum.
+* Allow to set the chips thickness at import and adjust the dose rate accordingly.
 
 ### Version 0.1.13 (2022-10-20)
 * Add additional column in Post-processing pane to allow a correction of the 

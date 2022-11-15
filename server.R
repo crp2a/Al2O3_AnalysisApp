@@ -69,6 +69,7 @@ shinyServer(function(input, output, session) {
           POSITION = as.integer(file_info$position),
           SAMPLE_ID = sprintf("Sample %02d", as.numeric(file_info$position)),
           TYPE = dosimeter_type[1],
+          THICKNESS = dosimeter_thickness[1],
           INCLUDE = verify,
           stringsAsFactors = FALSE
         ))
@@ -83,7 +84,8 @@ shinyServer(function(input, output, session) {
           hot_col("FILENAME", readOnly = TRUE) %>%
           hot_col("WHEEL", readOnly = TRUE) %>%
           hot_col("POSITION", readOnly = TRUE) %>%
-          hot_col("TYPE", type = "dropdown", source = dosimeter_type)
+          hot_col("TYPE", type = "dropdown", source = dosimeter_type) %>%
+          hot_col("THICKNESS", type = "dropdown", source = dosimeter_thickness)
 
       })
 
@@ -104,7 +106,8 @@ shinyServer(function(input, output, session) {
       hot_col("FILENAME", readOnly = TRUE) %>%
       hot_col("WHEEL", readOnly = TRUE) %>%
       hot_col("POSITION", readOnly = TRUE) %>%
-      hot_col("TYPE", type = "dropdown", source = dosimeter_type)
+      hot_col("TYPE", type = "dropdown", source = dosimeter_type) %>%
+      hot_col("THICKNESS", type = "dropdown", source = dosimeter_thickness)
 
     })
 
@@ -237,7 +240,7 @@ shinyServer(function(input, output, session) {
         ##warning handling taken from https://github.com/daattali/advanced-shiny/blob/master/show-warnings-messages/app.R
         results <<- withCallingHandlers({
           shinyjs::html(id = "warnings", html = "")
-          analyse_Al2O3C_Measurement(
+          Luminescence::analyse_Al2O3C_Measurement(
             object = file_data,
             travel_dosimeter = if(!is.null(travel_dosimeters)){
               sample_info_full$data[["POSITION"]][sample_info_full$data[["INCLUDE"]]][travel_dosimeters]
@@ -442,22 +445,34 @@ shinyServer(function(input, output, session) {
            calib.date = as.Date(sourceDR_FINAL$CAL_DATE),
            calib.dose.rate = c(sourceDR_FINAL$DR),
            calib.error = c(sourceDR_FINAL$DR_ERROR)
-         )$dose.rate
-
+         )
+         source_dose_rate <- source_dose_rate$dose.rate
+         ## Adjust the source dose rate
+         src_dose <- source_dose_rate[[1]]
+         src_dose_err <- source_dose_rate[[2]]
        }else{
-         source_dose_rate <- data.frame(x = 1, y = 0)
-
+         src_dose <- 1
+         src_dose_err <- 0
        }
+
+       ## Keep only thickness for retained chips
+       thick <- sample_info_full$data[["THICKNESS"]][sample_info_full$data[["INCLUDE"]]][!df_reactive$data[["REJECT"]]]
+       ## Set correction factors of the source dose rate
+       fthick <- rep(1, length(thick))
+       fthick[thick == "thin"] <- 1.175
+       ## Adjust the source dose rate
+       src_dose <- src_dose * fthick
+       src_dose_err <- src_dose_err * fthick
 
       ##combine
       results_final <<- reactiveValues(data = cbind(
            df_grouped,
            MEASUREMENT_DATE = as.Date(strtrim(file_info$startDate[1],8), format = "%Y%m%d"),
-           SOURCE_DR = source_dose_rate[[1]],
-           SOURCE_DR.ERROR = source_dose_rate[[2]],
-           SOUREC_DR_CORR = 1,
-           DOSE = df_grouped[["MEAN"]] * source_dose_rate[,1],
-           DOSE.ERROR = df_grouped[["SD"]] * source_dose_rate[,1]
+           SOURCE_DR = src_dose,
+           SOURCE_DR.ERROR = src_dose_err,
+           SOUREC_DR_CORR = fthick,
+           DOSE = df_grouped[["MEAN"]] * src_dose,
+           DOSE.ERROR = df_grouped[["SD"]] * src_dose
          ))
 
          ##add columns if they do not yet exist
