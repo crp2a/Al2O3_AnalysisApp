@@ -1,6 +1,7 @@
 # History files
 .Rhistory
 .Rapp.history
+
 # Session Data files
 .RData
 # Example code in package build process
@@ -14,6 +15,7 @@
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
+vignettes/figures/
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
 # knitr and R markdown default cache directories
@@ -22,20 +24,18 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
-.Rproj.user
-README.html
-# Exclude Filter database
-Data/*
+
 # Exclude Apple stuff
 /*.DS_Store
 .DS_Store
 
-# Exclude github readme
-README.html
-
-# Exclude other stuff
+# Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
+rsconnect/
+inst/doc
 internals/*
 shiny_bookmarks/*
 
-# Exclude calibration data
-calibration_data/*Al2O3_CalibrationData.Rdata
+# Temporary files created by devtools
+CRAN-RELEASE
+doc
+Meta

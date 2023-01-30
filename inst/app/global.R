@@ -6,16 +6,7 @@
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ##load needed packages
-rm(list = ls())
-require(Luminescence)
-require(shiny)
-require(shinyjs)
-require(shape)
-require(rhandsontable)
-require(plyr)
-require(ggplot2)
-require(knitr)
-require(digest)
+library(Al2O3AnalysisApp)
 
 ##Shiny settings
 options(shiny.maxRequestSize = 30 * 1024 ^ 2)

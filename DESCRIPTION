@@ -1,0 +1,31 @@
+Package: Al2O3AnalysisApp
+Title: 'Shiny' Application for the Analysis of Al2O3:C Chips Measurements
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Sebastian", "Kreutzer", , "sebastian.kreutzer@uni-heidelberg.de", role = "aut",
+           comment = c(ORCID = "0000-0002-0734-2199")),
+    person("Nicolas", "Frerebeau", , "nicolas.frerebeau@u-bordeaux-montaigne.fr", role = "aut",
+           comment = c(ORCID = "0000-0001-5759-4944")),
+    person("Archéosciences Bordeaux", , , "services-archeosciences@u-bordeaux-montaigne.fr", role = "cre"),
+    person("Université Bordeaux Montaigne", role = c("cph", "fnd")),
+    person("CNRS", role = "fnd"),
+    person("LabEx Sciences archéologiques de Bordeaux", role = "fnd")
+  )
+Description: A 'Shiny' application providing an exhanced graphical user
+    interface to the function analyse_Al2O3C_Measurement() from the R
+    package 'Luminescence'.
+License: GPL (>= 3)
+URL: https://github.com/crp2a/Al2O3_AnalysisApp
+BugReports: https://github.com/crp2a/Al2O3_AnalysisApp/issues
+Imports: 
+    digest,
+    ggplot2,
+    knitr,
+    Luminescence,
+    rhandsontable,
+    shape,
+    shiny,
+    shinyjs
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
