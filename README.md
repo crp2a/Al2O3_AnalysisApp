@@ -4,7 +4,7 @@ The 'Al2O3:C Analysis App' is a [Shiny](https://shiny.rstudio.com) application p
 
 ## Impressions
 
-![](img/screenshots.png)
+![](inst/img/screenshots.png)
 
 ## Installation and usage
 
@@ -15,7 +15,7 @@ This app needs the R package ['Luminescence'](https://CRAN.R-project.org/package
 ### Installation
 
 The application can be either run local through RStudio or on a local device or an external
-[Shiny Server](https://www.rstudio.com/products/shiny/shiny-server/).
+[Shiny Server](https://posit.co/products/open-source/shinyserver/).
 
 ## License
 
