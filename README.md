@@ -4,7 +4,7 @@ The 'Al2O3:C Analysis App' is a [Shiny](https://shiny.rstudio.com) application p
 
 ## Impressions
 
-![](inst/img/screenshots.png)
+![](inst/app/img/screenshots.png)
 
 ## Installation and usage
 
