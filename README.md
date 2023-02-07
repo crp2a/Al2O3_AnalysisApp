@@ -1,35 +1,57 @@
-# Al<sub>2</sub>O<sub>3</sub>:C Analysis App
 
-The 'Al2O3:C Analysis App' is a [Shiny](https://shiny.rstudio.com) application providing an exhanced graphical user interface to the function `analyse_Al2O3C_Measurement()` from the **R** package ['Luminescence'](https://CRAN.R-project.org/package=Luminescence). 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
-## Impressions
+# Al2O3AnalysisApp
 
-![](inst/app/img/screenshots.png)
+<!-- badges: start -->
 
-## Installation and usage
+[![r-universe](https://crp2a.r-universe.dev/badges/Al2O3AnalysisApp)](https://crp2a.r-universe.dev)
 
-### Requirements
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+<!-- badges: end -->
 
-This app needs the R package ['Luminescence'](https://CRAN.R-project.org/package=Luminescence) in version 0.9.0 or newer. 
+The *Al<sub>2</sub>O<sub>3</sub>:C Analysis App* is a
+[**Shiny**](https://shiny.rstudio.com) application providing an exhanced
+graphical user interface to the function `analyse_Al2O3C_Measurement()`
+from the [**Luminescence**](https://github.com/R-Lum/Luminescence)
+package.
 
-### Installation
+## Installation
 
-The application can be either run local through RStudio or on a local device or an external
-[Shiny Server](https://posit.co/products/open-source/shinyserver/).
+You can install **Al2O3AnalysisApp** from [our
+repository](https://crp2a.r-universe.dev) with:
 
-## License
+``` r
+install.packages("Al2O3AnalysisApp", repos = "https://crp2a.r-universe.dev")
+```
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-any later version.
+## Usage
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-[GNU General Public License](https://github.com/RLumSK/Al2O3_AnalysisApp/blob/master/LICENSE) 
-for more details.
+The application can be either run local through RStudio or on a local
+device or an external [Shiny
+Server](https://www.rstudio.com/products/shiny/shiny-server/).
 
-## <span class="glyphicon glyphicon-euro"></span> Funding
+``` r
+# Load the package
+library(Al2O3AnalysisApp)
 
-The development of this application was supported by LabEx LaScArBx (ANR - n˚ ANR-10-LABX-52).
+# Run the app
+run_app()
+```
+
+![](man/figures/README-screenshots-1.png)
+
+## Contributing
+
+Please note that the **Al2O3AnalysisApp** project is released with a
+[Contributor Code of
+Conduct](https://github.com/crp2a/Al2O3AnalysisApp/blob/master/.github/CODE_OF_CONDUCT.md).
+By contributing to this project, you agree to abide by its terms.
+
+## Acknowledgements
+
+This work received a state financial support managed by the Agence
+Nationale de la Recherche (France) throught the program *Investissements
+d’avenir* (ref. [10-LABX-0052](https://lascarbx.labex.u-bordeaux.fr)).
