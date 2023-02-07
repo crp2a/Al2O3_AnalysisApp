@@ -1,0 +1,33 @@
+{
+    "title": "Al2O3AnalysisApp: 'Shiny' Application for the Analysis of Al2O3:C Chips Measurements",
+    "description": "<p>A 'Shiny' application providing an exhanced graphical user interface to the function analyse_Al2O3C_Measurement() from the R package 'Luminescence'</p>",
+    "notes": "This work received a state financial support managed by the Agence Nationale de la Recherche (France) throught the program Investissements d'avenir (ref. 10-LABX-0052).",
+    "creators": [,
+        {
+            "orcid": "0000-0002-0734-2199",
+            "affiliation": "Universit\u00e9 Bordeaux Montaigne",
+            "name": "Kreutzer, Sebastian"
+        }
+        {
+            "orcid": "0000-0001-5759-4944",
+            "affiliation": "Universit\u00e9 Bordeaux Montaigne",
+            "name": "Frerebeau, Nicolas"
+        }
+    ],
+    "language": "eng",
+    "keywords": [
+        "archaeology",
+        "geochronology",
+        "luminescence dating",
+        "r package",
+        "shiny apps"
+    ],
+    "upload_type": "software",
+    "communities": [
+        {
+            "identifier": "archeosciences-bordeaux"
+        }
+    ],
+    "license": "GPL-3.0+",
+    "access_right": "open"
+}

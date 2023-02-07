@@ -1,6 +1,8 @@
-^LICENSE\.md$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.github$
 ^data-raw$
+^\.zenodo\.json$
+^codemeta\.json$
+^LICENSE\.md$
 ^README\.Rmd$
-^CODE_OF_CONDUCT\.md$
