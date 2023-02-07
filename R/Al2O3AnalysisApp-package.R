@@ -32,3 +32,6 @@
 #' @docType package
 #' @keywords internal
 "_PACKAGE"
+
+#' @import shiny
+NULL
