@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/crp2a/Al2O3_AnalysisApp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/crp2a/Al2O3_AnalysisApp/actions/workflows/R-CMD-check.yaml)
+
 [![r-universe](https://crp2a.r-universe.dev/badges/Al2O3AnalysisApp)](https://crp2a.r-universe.dev)
 
 [![Project Status: Active – The project has reached a stable, usable
@@ -47,7 +49,7 @@ run_app()
 
 Please note that the **Al2O3AnalysisApp** project is released with a
 [Contributor Code of
-Conduct](https://github.com/crp2a/Al2O3AnalysisApp/blob/master/.github/CODE_OF_CONDUCT.md).
+Conduct](https://github.com/crp2a/Al2O3_AnalysisApp/blob/master/.github/CODE_OF_CONDUCT.md).
 By contributing to this project, you agree to abide by its terms.
 
 ## Acknowledgements
