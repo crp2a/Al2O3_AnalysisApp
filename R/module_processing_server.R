@@ -102,38 +102,36 @@ module_processing_server <- function(id, user_data, user_settings) {
     })
 
     observe({
-      if (is.null(user_data$final)) {
-        ## Add columns if they do not yet exist
-        final <- data.frame(
-          SAMPLE_ID = combined()$SAMPLE_ID,
-          DATE_IN = Sys.Date(),
-          DATE_OUT = Sys.Date(),
-          DURATION = 0,
-          COSMIC_DR = 0,
-          COSMIC_DR.ERROR = 0,
-          COSMIC_DOSE = 0,
-          COSMIC_DOSE.ERROR = 0,
-          ATTENUATION_CORR = 1.068,
-          DOSE_CORR = 0,
-          DOSE_CORR.ERROR = 0,
-          DR = 0,
-          DR.ERROR = 0,
-          GAMMA = 0,
-          GAMMA.ERROR = 0,
-          GAMMA.ERROR_REL = 0
-        )
+      ## Add columns if they do not yet exist
+      final <- data.frame(
+        SAMPLE_ID = combined()$SAMPLE_ID,
+        DATE_IN = Sys.Date(),
+        DATE_OUT = Sys.Date(),
+        DURATION = 0,
+        COSMIC_DR = 0,
+        COSMIC_DR.ERROR = 0,
+        COSMIC_DOSE = 0,
+        COSMIC_DOSE.ERROR = 0,
+        ATTENUATION_CORR = 1.068,
+        DOSE_CORR = 0,
+        DOSE_CORR.ERROR = 0,
+        DR = 0,
+        DR.ERROR = 0,
+        GAMMA = 0,
+        GAMMA.ERROR = 0,
+        GAMMA.ERROR_REL = 0
+      )
 
-        ## Fix colnames
-        colnames(final) <- c(
-          "SAMPLE_ID", "DATE_IN", "DATE_OUT",
-          "DURATION \n [days]", "COSMIC_DR \n [µGy/a]", "COSMIC_DR.ERROR \n [µGy/a]",
-          "COSMIC_DOSE \n [µGy]", "COSMIC_DOSE.ERROR \n [µGy]", "TUBE ATTENUATION \n CORRECTION FACTOR",
-          "DOSE_CORR \n [µGy]", "DOSE_CORR.ERROR \n [µGy]", "FINAL DR \n [µGy/a]", "FINAL DR.ERROR \n [µGy/a]",
-          "FINAL GAMMA_DR \n [µGy/a]", "FINAL GAMMA_DR.ERROR \n [µGy/a]", "FINAL GAMMA_DR.ERROR \n [%]"
-        )
+      ## Fix colnames
+      colnames(final) <- c(
+        "SAMPLE_ID", "DATE_IN", "DATE_OUT",
+        "DURATION \n [days]", "COSMIC_DR \n [µGy/a]", "COSMIC_DR.ERROR \n [µGy/a]",
+        "COSMIC_DOSE \n [µGy]", "COSMIC_DOSE.ERROR \n [µGy]", "TUBE ATTENUATION \n CORRECTION FACTOR",
+        "DOSE_CORR \n [µGy]", "DOSE_CORR.ERROR \n [µGy]", "FINAL DR \n [µGy/a]", "FINAL DR.ERROR \n [µGy/a]",
+        "FINAL GAMMA_DR \n [µGy/a]", "FINAL GAMMA_DR.ERROR \n [µGy/a]", "FINAL GAMMA_DR.ERROR \n [%]"
+      )
 
-        user_data$final <- final
-      }
+      user_data$final <- final
     })
 
     ## Render table of combined statistics
