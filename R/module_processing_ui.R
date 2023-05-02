@@ -28,6 +28,7 @@ module_processing_ui <- function(id) {
         ),
         fluidRow(
           style = "margin-top: 25px;",
+          textOutput(outputId = ns("travel_correction_info")),
           textOutput(outputId = ns("post_processing_info")),
           rhandsontable::rHandsontableOutput(
             outputId = ns("post_processing_combined"),

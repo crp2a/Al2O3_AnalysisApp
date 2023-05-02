@@ -111,10 +111,10 @@ module_analysis_server <- function(id, user_data, user_settings) {
     results <- eventReactive(input$run, {
       signal <- seq(min(input$signal_integral), max(input$signal_integral), 1)
 
-      ## Warning handling taken from https://github.com/daattali/advanced-shiny/blob/master/show-warnings-messages/app.R
       travel_position <- included_samples()$POSITION[travel()]
       if (length(travel()) == 0 || !input$travel_dosimeters) travel_position <- NULL
 
+      ## Warning handling taken from https://github.com/daattali/advanced-shiny/blob/master/show-warnings-messages/app.R
       results <- withCallingHandlers({
         shinyjs::html(id = "warnings", html = "")
         Luminescence::analyse_Al2O3C_Measurement(
@@ -150,6 +150,14 @@ module_analysis_server <- function(id, user_data, user_settings) {
       ## Correct for the travel dosimeter
       if (!is.null(results$data_TDcorrected)) {
         df[-travel(), c(9, 10)] <- round(results$data_TDcorrected[, c(1, 2)], 4)
+
+        ## Store travel correction for later use
+        travel_mean <- stats::weighted.mean(
+          x = df$DE[travel()],
+          w = df$DE_ERROR[travel()]
+        )
+        travel_sd <- stats::sd(df$DE[travel()])
+        user_data$travel_correction <- c(travel_mean, travel_sd)
       }
 
       ## Keep only thickness for retained chips

@@ -29,6 +29,13 @@ module_processing_server <- function(id, user_data, user_settings) {
       "Sample summary | Source dose rate re-calculated to measurement date."
     })
 
+    output$travel_correction_info <- renderText({
+      req(user_data$travel_correction)
+      sprintf("Travel dosimeter correction: %g +/- %g s.",
+              round(user_data$travel_correction[[1L]], 3),
+              round(user_data$travel_correction[[2L]], 3))
+    })
+
     ## Group statistics
     combined <- reactive({
       ## Split by sample ID
