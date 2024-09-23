@@ -26,14 +26,13 @@ You can install **Al2O3AnalysisApp** from [our
 repository](https://crp2a.r-universe.dev) with:
 
 ``` r
-install.packages("Al2O3AnalysisApp", repos = "https://crp2a.r-universe.dev")
+options(repos = c(CRAN = "https://cloud.r-project.org",
+                  crp2a = "https://crp2a.r-universe.dev"))
+
+install.packages("Al2O3AnalysisApp")
 ```
 
 ## Usage
-
-The application can be either run local through RStudio or on a local
-device or an external [Shiny
-Server](https://www.rstudio.com/products/shiny/shiny-server/).
 
 ``` r
 # Load the package
@@ -56,4 +55,4 @@ By contributing to this project, you agree to abide by its terms.
 
 This work received a state financial support managed by the Agence
 Nationale de la Recherche (France) throught the program *Investissements
-d’avenir* (ref. [10-LABX-0052](https://lascarbx.labex.u-bordeaux.fr)).
+d’avenir* (ref. 10-LABX-0052).

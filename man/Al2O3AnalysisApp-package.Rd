@@ -3,11 +3,10 @@
 \docType{package}
 \name{Al2O3AnalysisApp-package}
 \alias{Al2O3AnalysisApp-package}
-\alias{_PACKAGE}
 \alias{Al2O3AnalysisApp}
 \title{Al2O3AnalysisApp: 'Shiny' Application for the Analysis of Al2O3:C Chips Measurements}
 \description{
-A 'Shiny' application providing an exhanced graphical user interface to the function analyse_Al2O3C_Measurement() from the R package 'Luminescence'.
+A 'shiny' application providing an exhanced graphical user interface to the function analyse_Al2O3C_Measurement() from the R package 'Luminescence'.
 }
 \details{
 \tabular{ll}{
@@ -20,7 +19,7 @@ A 'Shiny' application providing an exhanced graphical user interface to the func
 \note{
 This work received a state financial support managed by the Agence Nationale
 de la Recherche (France) throught the program \emph{Investissements d'avenir}
-(ref. \href{https://lascarbx.labex.u-bordeaux.fr}{ANR-10-LABX-52}.
+(ref. ANR-10-LABX-52).
 }
 \seealso{
 Useful links:

@@ -30,12 +30,13 @@ The *Al<sub>2</sub>O<sub>3</sub>:C Analysis App* is a [**Shiny**](https://shiny.
 You can install **Al2O3AnalysisApp** from [our repository](https://crp2a.r-universe.dev) with:
 
 ```{r universe-installation, eval=FALSE}
-install.packages("Al2O3AnalysisApp", repos = "https://crp2a.r-universe.dev")
+options(repos = c(CRAN = "https://cloud.r-project.org",
+                  crp2a = "https://crp2a.r-universe.dev"))
+
+install.packages("Al2O3AnalysisApp")
 ```
 
 ## Usage
-
-The application can be either run local through RStudio or on a local device or an external [Shiny Server](https://www.rstudio.com/products/shiny/shiny-server/).
 
 ```{r shiny, eval=FALSE}
 # Load the package
@@ -53,4 +54,4 @@ Please note that the **Al2O3AnalysisApp** project is released with a [Contributo
 
 ## Acknowledgements
 
-This work received a state financial support managed by the Agence Nationale de la Recherche (France) throught the program *Investissements d'avenir* (ref. [10-LABX-0052](https://lascarbx.labex.u-bordeaux.fr)).
+This work received a state financial support managed by the Agence Nationale de la Recherche (France) throught the program *Investissements d'avenir* (ref. 10-LABX-0052).

@@ -26,7 +26,7 @@
 #' @note
 #' This work received a state financial support managed by the Agence Nationale
 #' de la Recherche (France) throught the program *Investissements d'avenir*
-#' (ref. \href{https://lascarbx.labex.u-bordeaux.fr}{ANR-10-LABX-52}.
+#' (ref. ANR-10-LABX-52).
 #' @name Al2O3AnalysisApp-package
 #' @aliases Al2O3AnalysisApp-package Al2O3AnalysisApp
 #' @docType package
