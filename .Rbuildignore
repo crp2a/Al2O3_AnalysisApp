@@ -6,3 +6,7 @@
 ^codemeta\.json$
 ^LICENSE\.md$
 ^README\.Rmd$
+^README\.html$
+
+^calibration_data$
+^internals$
