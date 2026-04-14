@@ -98,8 +98,8 @@ module_processing_server <- function(id, user_data, user_settings) {
       ## Make sure that the sample headers are OK
       colnames(combined) <- c(
         "SAMPLE_ID", "N", "SAMPLE MEAN \n [s]", "SAMPLE SD \n [s]", "CV \n [%]",
-        "DATE \n MEASUREMENT", "SOURCE_DR \n [µGy/s]", "SOURCE_DR.ERROR \n [µGy/s]",
-        "DOSE \n [µGy]", "DOSE.ERROR \n [µGy]"
+        "DATE \n MEASUREMENT", "SOURCE_DR \n [\u00b5Gy/s]", "SOURCE_DR.ERROR \n [µGy/s]",
+        "DOSE \n [\u00b5Gy]", "DOSE.ERROR \n [\u00b5Gy]"
       )
 
       ## Fix row names
