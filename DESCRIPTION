@@ -21,18 +21,18 @@ BugReports: https://github.com/crp2a/Al2O3_AnalysisApp/issues
 Depends:
     R (>= 4.4.0)
 Imports: 
-    digest,
+    digest (>= 0.6.39),
     graphics,
     grDevices,
-    htmlwidgets,
-    Luminescence (>= 0.9.0),
-    rhandsontable,
-    shiny (>= 1.6.0),
-    shinyjs,
+    htmlwidgets (>= 1.6.4),
+    Luminescence (>= 1.2.1),
+    rhandsontable (>= 0.3.8),
+    shiny (>= 1.13.0),
+    shinyjs (>= 2.1.1),
     stats,
     utils
 Suggests:
-    pander
+    pander (>= 0.6.6)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
