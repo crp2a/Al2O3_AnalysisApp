@@ -108,7 +108,7 @@ plot_circle <- function(x, y, radius, n = 100, ...) {
 #' @keywords internal
 #' @author S. Kreutzer
 #' @noRd
-import_XSYG <- function(file, name, file_names_assignment = NULL){
+import_XSYG <- function(file, name = "default", file_names_assignment = NULL, verify_hash = TRUE){
   ## Import data
   file_data <- Luminescence::read_XSYG2R(
     file = file,
@@ -134,24 +134,26 @@ import_XSYG <- function(file, name, file_names_assignment = NULL){
   )
 
   ## Kick out what do not belong into the dataset
-  if (!all(verify)) {
-    if (!any(verify)) {
-      showModal(
-        modalDialog(
-          "All files were excluded, try another file!",
-          title = "Verification hash mismatch",
-          footer = modalButton("Ok, I'll select another file")
+  if(verify_hash) {
+    if (!all(verify)) {
+      if (!any(verify)) {
+        showModal(
+          modalDialog(
+            "All files were excluded, try another file!",
+            title = "Verification hash mismatch",
+            footer = modalButton("Ok, I'll select another file")
+          )
         )
-      )
-      return(list(data = NULL, info = NULL, verify = verify))
-    } else {
-      showModal(
-        modalDialog(
-          "Some of your data do not appear to be Al2O3:C measurement data and were automatically excluded!",
-          title = "Verification hash mismatch",
-          footer = modalButton("Well, that may happen.")
+        return(list(data = NULL, info = NULL, verify = verify))
+      } else {
+        showModal(
+          modalDialog(
+            "Some of your data do not appear to be Al2O3:C measurement data and were automatically excluded!",
+            title = "Verification hash mismatch",
+            footer = modalButton("Well, that may happen.")
+          )
         )
-      )
+      }
     }
   }
 

@@ -23,6 +23,11 @@ module_import_ui <- function(id) {
           accept = "*.xsyg"
         ),
         checkboxInput(
+          inputId = ns("verify_hash"),
+          label = "Verify input data",
+          value = TRUE
+        ),
+        checkboxInput(
           inputId = ns("file_names_assignment"),
           label = "Use filenames for wheel assignment",
           value = FALSE

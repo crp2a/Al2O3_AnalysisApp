@@ -19,23 +19,27 @@ module_import_server <- function(id, user_data, user_settings) {
       new <- import_XSYG(
         file = as.list(input$files$datapath),
         name = input$files$name,
-        file_names_assignment = input$file_names_assignment
+        file_names_assignment = input$file_names_assignment,
+        verify_hash = input$verify_hash
       )
 
       ## Set reactive values
       user_data$data <- new$data
       user_data$info <- new$info
 
-      user_data$samples <- data.frame(
-        FILENAME = new$info$name,
-        WHEEL = as.character(new$info$wheels),
-        POSITION = as.integer(new$info$position),
-        SAMPLE_ID = sprintf("Sample %02d", as.numeric(new$info$position)),
-        TYPE = dosimeter_type[1],
-        THICKNESS = dosimeter_thickness[1],
-        INCLUDE = new$verify,
-        stringsAsFactors = FALSE
-      )
+
+      if(!is.null(new$info)) {
+        user_data$samples <- data.frame(
+          FILENAME = new$info$name,
+          WHEEL = as.character(new$info$wheels),
+          POSITION = as.integer(new$info$position),
+          SAMPLE_ID = sprintf("Sample %02d", as.numeric(new$info$position)),
+          TYPE = dosimeter_type[1],
+          THICKNESS = dosimeter_thickness[1],
+          INCLUDE = new$verify,
+          stringsAsFactors = FALSE
+        )
+      }
     })
 
     ## Create tabs
