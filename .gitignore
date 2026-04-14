@@ -39,3 +39,7 @@ shiny_bookmarks/*
 CRAN-RELEASE
 doc
 Meta
+
+# Local stuff
+^calibration_data$
+^README\.html$
