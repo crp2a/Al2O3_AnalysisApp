@@ -67,7 +67,7 @@ module_analysis_ui <- function(id) {
         ),
         fluidRow(
           helpText(
-            "Note: Dose values are here listed in seconds, not µGy!",
+            "Note: Dose values are here listed in seconds, not \u00b2Gy!",
             "To reject data permanently, go back to the 'Import' panel."
           ),
           htmlOutput(outputId = ns("warnings"), style = "color: red;"),

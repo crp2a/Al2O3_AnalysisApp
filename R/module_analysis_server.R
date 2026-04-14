@@ -55,7 +55,7 @@ module_analysis_server <- function(id, user_data, user_settings) {
 
         output$source_DR_FINAL <- renderText({
           sprintf(
-            "(%s: %f ± %f %s)",
+            "(%s: %f \u00b1 %f %s)",
             sourceDR_FINAL[["CAL_DATE"]],
             round(sourceDR_FINAL[[1]], 2),
             round(sourceDR_FINAL[[2]], 2),
@@ -64,14 +64,14 @@ module_analysis_server <- function(id, user_data, user_settings) {
         })
         output$source_DR_FINAL_today <- renderText({
           sprintf(
-            "DR today: %f ± %f µGy/s",
+            "DR today: %f \u00b1 %f \u00b2Gy/s",
             round(DR_today[[1]], 2),
             round(DR_today[[2]], 2)
           )
         })
       } else {
-        output$source_DR_FINAL <- renderText({"(NA ± NA µGy/s)"})
-        output$source_DR_FINAL_today <- renderText({"NA ± NA µGy/s"})
+        output$source_DR_FINAL <- renderText({"(NA \u00b1 NA \u00b5Gy/s)"})
+        output$source_DR_FINAL_today <- renderText({"NA \u00b1 NA \u00b2Gy/s"})
       }
     })
 

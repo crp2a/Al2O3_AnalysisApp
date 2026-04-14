@@ -70,7 +70,7 @@ module_processing_server <- function(id, user_data, user_settings) {
       ## Calculate relative error
       combined$CV <- abs(combined$SD / combined$MEAN * 100)
 
-      ## Translate to µGy
+      ## Translate to \u00b2Gy
       start_date <- strtrim(user_data$info$startDate[1], 8)
       start_date <- as.Date(start_date, format = "%Y%m%d")
       if (!is.null(sourceDR_FINAL)) {
@@ -98,7 +98,7 @@ module_processing_server <- function(id, user_data, user_settings) {
       ## Make sure that the sample headers are OK
       colnames(combined) <- c(
         "SAMPLE_ID", "N", "SAMPLE MEAN \n [s]", "SAMPLE SD \n [s]", "CV \n [%]",
-        "DATE \n MEASUREMENT", "SOURCE_DR \n [\u00b5Gy/s]", "SOURCE_DR.ERROR \n [µGy/s]",
+        "DATE \n MEASUREMENT", "SOURCE_DR \n [\u00b5Gy/s]", "SOURCE_DR.ERROR \n [\u00b2Gy/s]",
         "DOSE \n [\u00b5Gy]", "DOSE.ERROR \n [\u00b5Gy]"
       )
 
@@ -132,10 +132,10 @@ module_processing_server <- function(id, user_data, user_settings) {
       ## Fix colnames
       colnames(final) <- c(
         "SAMPLE_ID", "DATE_IN", "DATE_OUT",
-        "DURATION \n [days]", "COSMIC_DR \n [µGy/a]", "COSMIC_DR.ERROR \n [µGy/a]",
-        "COSMIC_DOSE \n [µGy]", "COSMIC_DOSE.ERROR \n [µGy]", "TUBE ATTENUATION \n CORRECTION FACTOR",
-        "DOSE_CORR \n [µGy]", "DOSE_CORR.ERROR \n [µGy]", "FINAL DR \n [µGy/a]", "FINAL DR.ERROR \n [µGy/a]",
-        "FINAL GAMMA_DR \n [µGy/a]", "FINAL GAMMA_DR.ERROR \n [µGy/a]", "FINAL GAMMA_DR.ERROR \n [%]"
+        "DURATION \n [days]", "COSMIC_DR \n [\u00b2Gy/a]", "COSMIC_DR.ERROR \n [\u00b2Gy/a]",
+        "COSMIC_DOSE \n [\u00b2Gy]", "COSMIC_DOSE.ERROR \n [\u00b2Gy]", "TUBE ATTENUATION \n CORRECTION FACTOR",
+        "DOSE_CORR \n [\u00b2Gy]", "DOSE_CORR.ERROR \n [\u00b2Gy]", "FINAL DR \n [\u00b2Gy/a]", "FINAL DR.ERROR \n [\u00b2Gy/a]",
+        "FINAL GAMMA_DR \n [\u00b2Gy/a]", "FINAL GAMMA_DR.ERROR \n [\u00b2Gy/a]", "FINAL GAMMA_DR.ERROR \n [%]"
       )
 
       user_data$final <- final
@@ -192,8 +192,8 @@ module_processing_server <- function(id, user_data, user_settings) {
       )
       hot <- rhandsontable::hot_col(hot, col = "DATE_IN", readOnly = FALSE)
       hot <- rhandsontable::hot_col(hot, col = "DATE_OUT", readOnly = FALSE)
-      hot <- rhandsontable::hot_col(hot, col = "COSMIC_DR \n [µGy/a]", readOnly = FALSE)
-      hot <- rhandsontable::hot_col(hot, col = "COSMIC_DR.ERROR \n [µGy/a]", readOnly = FALSE)
+      hot <- rhandsontable::hot_col(hot, col = "COSMIC_DR \n [\u00b2Gy/a]", readOnly = FALSE)
+      hot <- rhandsontable::hot_col(hot, col = "COSMIC_DR.ERROR \n [\u00b2Gy/a]", readOnly = FALSE)
       hot <- rhandsontable::hot_col(hot, col = "TUBE ATTENUATION \n CORRECTION FACTOR", readOnly = FALSE)
       hot <- rhandsontable::hot_cols(hot, columnSorting = FALSE)
     })
@@ -205,15 +205,15 @@ module_processing_server <- function(id, user_data, user_settings) {
         x <- seq_len(n)
         graphics::plot(
           x = x,
-          y = combined()[["DOSE \n [µGy]"]],
-          xlab = "", ylab = "DOSE [µGy]",
+          y = combined()[["DOSE \n [\u00b2Gy]"]],
+          xlab = "", ylab = "DOSE [\u00b2Gy]",
           type = "p", pch = 16, col = "black", las = 1,
           main = "Totally Absorbed Dose"
         )
         graphics::segments(
           x0 = x, x1 = x,
-          y0 = combined()[["DOSE \n [µGy]"]] - combined()[["DOSE.ERROR \n [µGy]"]],
-          y1 = combined()[["DOSE \n [µGy]"]] + combined()[["DOSE.ERROR \n [µGy]"]],
+          y0 = combined()[["DOSE \n [\u00b2Gy]"]] - combined()[["DOSE.ERROR \n [\u00b2Gy]"]],
+          y1 = combined()[["DOSE \n [\u00b2Gy]"]] + combined()[["DOSE.ERROR \n [\u00b2Gy]"]],
           lty = 1, col = "black"
         )
       },
@@ -228,28 +228,28 @@ module_processing_server <- function(id, user_data, user_settings) {
       tmp[["DURATION \n [days]"]] <-  as.integer(tmp$DATE_OUT - tmp$DATE_IN)
 
       ## Update COSMIC_DOSE
-      tmp[["COSMIC_DOSE \n [µGy]"]] <- (tmp[["COSMIC_DR \n [µGy/a]"]] * tmp[["DURATION \n [days]"]]) / 365.25
-      tmp[["COSMIC_DOSE.ERROR \n [µGy]"]] <- tmp[["COSMIC_DOSE \n [µGy]"]] * tmp[["COSMIC_DR.ERROR \n [µGy/a]"]] / tmp[["COSMIC_DR \n [µGy/a]"]]
+      tmp[["COSMIC_DOSE \n [\u00b2Gy]"]] <- (tmp[["COSMIC_DR \n [\u00b2Gy/a]"]] * tmp[["DURATION \n [days]"]]) / 365.25
+      tmp[["COSMIC_DOSE.ERROR \n [\u00b2Gy]"]] <- tmp[["COSMIC_DOSE \n [\u00b2Gy]"]] * tmp[["COSMIC_DR.ERROR \n [\u00b2Gy/a]"]] / tmp[["COSMIC_DR \n [\u00b2Gy/a]"]]
 
       ## Prevent division by 0
-      tmp[["COSMIC_DOSE.ERROR \n [µGy]"]][!is.finite(tmp[["COSMIC_DOSE.ERROR \n [µGy]"]])] <- 0
+      tmp[["COSMIC_DOSE.ERROR \n [\u00b2Gy]"]][!is.finite(tmp[["COSMIC_DOSE.ERROR \n [\u00b2Gy]"]])] <- 0
 
       ## Update DOSE based on the given cosmic dose and the attenuation factor
-      tmp[["DOSE_CORR \n [µGy]"]] <- ((combined()[["DOSE \n [µGy]"]] - tmp[["COSMIC_DOSE \n [µGy]"]]) * tmp[["TUBE ATTENUATION \n CORRECTION FACTOR"]]) + tmp[["COSMIC_DOSE \n [µGy]"]]
-      tmp[["DOSE_CORR.ERROR \n [µGy]"]] <- sqrt((tmp[["TUBE ATTENUATION \n CORRECTION FACTOR"]] * combined()[["DOSE.ERROR \n [µGy]"]])^2 + ((-tmp[["TUBE ATTENUATION \n CORRECTION FACTOR"]] + 1) * tmp[["COSMIC_DOSE.ERROR \n [µGy]"]])^2)
+      tmp[["DOSE_CORR \n [\u00b2Gy]"]] <- ((combined()[["DOSE \n [\u00b2Gy]"]] - tmp[["COSMIC_DOSE \n [\u00b2Gy]"]]) * tmp[["TUBE ATTENUATION \n CORRECTION FACTOR"]]) + tmp[["COSMIC_DOSE \n [\u00b2Gy]"]]
+      tmp[["DOSE_CORR.ERROR \n [\u00b2Gy]"]] <- sqrt((tmp[["TUBE ATTENUATION \n CORRECTION FACTOR"]] * combined()[["DOSE.ERROR \n [\u00b2Gy]"]])^2 + ((-tmp[["TUBE ATTENUATION \n CORRECTION FACTOR"]] + 1) * tmp[["COSMIC_DOSE.ERROR \n [\u00b2Gy]"]])^2)
 
       ## Update DR and DR.ERROR
-      tmp[["FINAL DR \n [µGy/a]"]] <- tmp[["DOSE_CORR \n [µGy]"]] * 365.25 / tmp[["DURATION \n [days]"]]
-      tmp[["FINAL DR.ERROR \n [µGy/a]" ]] <- tmp[["FINAL DR \n [µGy/a]"]] * tmp[["DOSE_CORR.ERROR \n [µGy]"]] /  tmp[["DOSE_CORR \n [µGy]"]]
+      tmp[["FINAL DR \n [\u00b2Gy/a]"]] <- tmp[["DOSE_CORR \n [\u00b2Gy]"]] * 365.25 / tmp[["DURATION \n [days]"]]
+      tmp[["FINAL DR.ERROR \n [\u00b2Gy/a]" ]] <- tmp[["FINAL DR \n [\u00b2Gy/a]"]] * tmp[["DOSE_CORR.ERROR \n [\u00b2Gy]"]] /  tmp[["DOSE_CORR \n [\u00b2Gy]"]]
 
       ## Replace all Inf values with 0
-      tmp[["FINAL DR \n [µGy/a]"]][!is.finite(tmp[["FINAL DR \n [µGy/a]"]])] <- 0
-      tmp[["FINAL DR.ERROR \n [µGy/a]" ]][!is.finite(tmp[["FINAL DR.ERROR \n [µGy/a]"]])] <- 0
+      tmp[["FINAL DR \n [\u00b2Gy/a]"]][!is.finite(tmp[["FINAL DR \n [\u00b2Gy/a]"]])] <- 0
+      tmp[["FINAL DR.ERROR \n [\u00b2Gy/a]" ]][!is.finite(tmp[["FINAL DR.ERROR \n [\u00b2Gy/a]"]])] <- 0
 
       ## Calculate final gamma dose rate
-      tmp[["FINAL GAMMA_DR \n [µGy/a]"]] <- tmp[["FINAL DR \n [µGy/a]"]] - tmp[["COSMIC_DR \n [µGy/a]"]]
-      tmp[["FINAL GAMMA_DR.ERROR \n [µGy/a]"]] <- sqrt(tmp[["FINAL DR.ERROR \n [µGy/a]"]]^2 + tmp[["COSMIC_DR.ERROR \n [µGy/a]"]]^2)
-      tmp[["FINAL GAMMA_DR.ERROR \n [%]"]] <- abs(tmp[["FINAL GAMMA_DR.ERROR \n [µGy/a]"]] / tmp[["FINAL GAMMA_DR \n [µGy/a]"]] * 100)
+      tmp[["FINAL GAMMA_DR \n [\u00b2Gy/a]"]] <- tmp[["FINAL DR \n [\u00b2Gy/a]"]] - tmp[["COSMIC_DR \n [\u00b2Gy/a]"]]
+      tmp[["FINAL GAMMA_DR.ERROR \n [\u00b2Gy/a]"]] <- sqrt(tmp[["FINAL DR.ERROR \n [\u00b2Gy/a]"]]^2 + tmp[["COSMIC_DR.ERROR \n [\u00b2Gy/a]"]]^2)
+      tmp[["FINAL GAMMA_DR.ERROR \n [%]"]] <- abs(tmp[["FINAL GAMMA_DR.ERROR \n [\u00b2Gy/a]"]] / tmp[["FINAL GAMMA_DR \n [\u00b2Gy/a]"]] * 100)
 
       user_data$final <- tmp
     })
