@@ -66,7 +66,7 @@ plot_carousel <- function(positions = NULL, included = NULL, wheel = NULL) {
     )
 
     ## Outer position text
-    graphics::text(x = cos(step) * 0.85, y = sin(step) * .85, labels = i)
+    graphics::text(x = cos(step) * 0.85, y = sin(step) * 0.85, labels = i)
     step <- step + arc.step
   }
 }
@@ -108,7 +108,8 @@ plot_circle <- function(x, y, radius, n = 100, ...) {
 #' @keywords internal
 #' @author S. Kreutzer
 #' @noRd
-import_XSYG <- function(file, name = "default", file_names_assignment = NULL, verify_hash = TRUE){
+import_XSYG <- function(file, name = "default", file_names_assignment = NULL,
+                        verify_hash = TRUE) {
   ## Import data
   file_data <- Luminescence::read_XSYG2R(
     file = file,
@@ -134,7 +135,7 @@ import_XSYG <- function(file, name = "default", file_names_assignment = NULL, ve
   )
 
   ## Kick out what do not belong into the dataset
-  if(verify_hash) {
+  if (verify_hash) {
     if (!all(verify)) {
       if (!any(verify)) {
         showModal(
@@ -158,7 +159,7 @@ import_XSYG <- function(file, name = "default", file_names_assignment = NULL, ve
   }
 
   ## Replace names by real file names
-  for (i in 1:length(unique(file_info$parentID))) {
+  for (i in seq_along(unique(file_info$parentID))) {
     file_info$name[grepl(pattern = unique(file_info$parentID)[i], x = file_info$parentID, fixed = TRUE)] <- name[i]
   }
 
@@ -171,13 +172,13 @@ import_XSYG <- function(file, name = "default", file_names_assignment = NULL, ve
     wheels <- file_info$name
     unique_names <- unique(wheels)
 
-    for(n in 1:length(unique_names)) {
+    for(n in seq_along(unique_names)) {
       wheels[grepl(pattern = unique_names[n], x = wheels)] <- paste0("wheel", n)
     }
   } else {
     wheels <- file_info$position
     for(n in 1:max(table(wheels))){
-      wheels[!duplicated(wheels) & !grepl(pattern = "wheel", x = wheels)] <- paste0("wheel", n)
+      wheels[!duplicated(wheels) & !grepl(pattern = "wheel", x = wheels, fixed = TRUE)] <- paste0("wheel", n)
     }
   }
 

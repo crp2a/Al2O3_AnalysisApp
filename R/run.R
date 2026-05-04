@@ -17,7 +17,7 @@
 #' @export
 run_app <- function(browser = TRUE, display = "auto") {
   app_dir <- system.file("app", package = "Al2O3AnalysisApp")
-  if (app_dir == "")
+  if (!nzchar(app_dir))
     stop("Could not find the app. ",
          "Try re-installing 'Al2O3AnalysisApp'.", call. = FALSE)
   shiny::shinyAppDir(

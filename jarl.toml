@@ -1,0 +1,6 @@
+[lint]
+select = ["ALL"]
+ignore = ["TESTTHAT","internal_function"]
+
+[lint.quotes]
+quote = "double"

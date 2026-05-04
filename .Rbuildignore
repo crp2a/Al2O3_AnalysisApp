@@ -4,6 +4,7 @@
 ^data-raw$
 ^\.zenodo\.json$
 ^codemeta\.json$
+^jarl\.toml$
 ^LICENSE\.md$
 ^README\.Rmd$
 ^README\.html$
