@@ -10,11 +10,15 @@ A 'shiny' application providing an exhanced graphical user interface to the func
 }
 \details{
 \tabular{ll}{
-\strong{Package:} \tab Al2O3AnalysisApp \cr
-\strong{Type:} \tab Package \cr
-\strong{Version:} \tab 0.0.0 \cr
-\strong{License:} \tab GPL-3 \cr
+\strong{Version} \tab 0.1.2 \cr
+\strong{License} \tab GPL-3 \cr
 }
+
+Archéosciences Bordeaux (UMR 6034)\cr
+Maison de l'Archéologie\cr
+Université Bordeaux Montaigne\cr
+F-33607 Pessac cedex\cr
+France
 }
 \note{
 This work received a state financial support managed by the Agence Nationale
@@ -30,22 +34,20 @@ Useful links:
 
 }
 \author{
-\strong{Full list of authors and contributors} (alphabetic order)
+\strong{Maintainer}: Archéosciences Bordeaux \email{services-archeosciences@u-bordeaux-montaigne.fr}
 
-\tabular{ll}{
-Nicolas Frerebeau \tab \emph{Université Bordeaux Montaigne, France} \cr
-Sebastian Kreutzer \tab \emph{Heidelberg University, Germany} \cr
+Authors:
+\itemize{
+  \item Sebastian Kreutzer \email{sebastian.kreutzer@uni-heidelberg.de} (\href{https://orcid.org/0000-0002-0734-2199}{ORCID})
+  \item Nicolas Frerebeau \email{nicolas.frerebeau@u-bordeaux-montaigne.fr} (\href{https://orcid.org/0000-0001-5759-4944}{ORCID})
 }
 
-\strong{Package maintainer}
+Other contributors:
+\itemize{
+  \item Université Bordeaux Montaigne (\href{https://ror.org/03pbgwk21}{ROR}) [funder]
+  \item CNRS (\href{https://ror.org/02feahw73}{ROR}) [funder]
+  \item LabEx Sciences archéologiques de Bordeaux [funder]
+}
 
-Nicolas Frerebeau\cr
-\email{services-archeosciences@u-bordeaux-montaigne.fr}
-
-Archéosciences Bordeaux (UMR 6034)\cr
-Maison de l'Archéologie\cr
-Université Bordeaux Montaigne\cr
-F-33607 Pessac cedex\cr
-France
 }
 \keyword{internal}

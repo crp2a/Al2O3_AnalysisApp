@@ -13,15 +13,15 @@ module_about_ui(id)
 About UI
 }
 \seealso{
-Other modules: 
-\code{\link{module_analysis_server}()},
-\code{\link{module_analysis_ui}()},
-\code{\link{module_import_server}()},
-\code{\link{module_import_ui}()},
-\code{\link{module_processing_server}()},
-\code{\link{module_processing_ui}()},
-\code{\link{module_settings_server}()},
-\code{\link{module_settings_ui}()}
+Other modules:
+\code{\link[=module_analysis_server]{module_analysis_server()}},
+\code{\link[=module_analysis_ui]{module_analysis_ui()}},
+\code{\link[=module_import_server]{module_import_server()}},
+\code{\link[=module_import_ui]{module_import_ui()}},
+\code{\link[=module_processing_server]{module_processing_server()}},
+\code{\link[=module_processing_ui]{module_processing_ui()}},
+\code{\link[=module_settings_server]{module_settings_server()}},
+\code{\link[=module_settings_ui]{module_settings_ui()}}
 }
 \concept{modules}
 \keyword{internal}

@@ -7,8 +7,10 @@ Authors@R: c(
     person("Nicolas", "Frerebeau", , "nicolas.frerebeau@u-bordeaux-montaigne.fr", role = "aut",
            comment = c(ORCID = "0000-0001-5759-4944")),
     person("Archéosciences Bordeaux", , , "services-archeosciences@u-bordeaux-montaigne.fr", role = "cre"),
-    person("Université Bordeaux Montaigne", role = c("cph", "fnd")),
-    person("CNRS", role = "fnd"),
+    person("Université Bordeaux Montaigne", role = "fnd",
+           comment = c(ROR = "03pbgwk21")),
+    person("CNRS", role = "fnd",
+           comment = c(ROR = "02feahw73")),
     person("LabEx Sciences archéologiques de Bordeaux", role = "fnd")
   )
 Maintainer: Archéosciences Bordeaux <services-archeosciences@u-bordeaux-montaigne.fr>
@@ -35,5 +37,5 @@ Suggests:
     pander (>= 0.6.6)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 LazyData: true
+Config/roxygen2/version: 8.0.0

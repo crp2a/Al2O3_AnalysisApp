@@ -8,12 +8,6 @@ module_settings_server(id, user_settings)
 }
 \arguments{
 \item{user_settings}{a \code{\link[shiny:reactiveValues]{shiny::reactiveValues()}} list.}
-
-\item{input}{provided by \pkg{Shiny}.}
-
-\item{output}{provided by \pkg{Shiny}.}
-
-\item{session}{provided by \pkg{Shiny}.}
 }
 \description{
 Settings Server
@@ -21,15 +15,15 @@ Settings Server
 \seealso{
 \code{\link[=module_settings_ui]{module_settings_ui()}}
 
-Other modules: 
-\code{\link{module_about_ui}()},
-\code{\link{module_analysis_server}()},
-\code{\link{module_analysis_ui}()},
-\code{\link{module_import_server}()},
-\code{\link{module_import_ui}()},
-\code{\link{module_processing_server}()},
-\code{\link{module_processing_ui}()},
-\code{\link{module_settings_ui}()}
+Other modules:
+\code{\link[=module_about_ui]{module_about_ui()}},
+\code{\link[=module_analysis_server]{module_analysis_server()}},
+\code{\link[=module_analysis_ui]{module_analysis_ui()}},
+\code{\link[=module_import_server]{module_import_server()}},
+\code{\link[=module_import_ui]{module_import_ui()}},
+\code{\link[=module_processing_server]{module_processing_server()}},
+\code{\link[=module_processing_ui]{module_processing_ui()}},
+\code{\link[=module_settings_ui]{module_settings_ui()}}
 }
 \concept{modules}
 \keyword{internal}

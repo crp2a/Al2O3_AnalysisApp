@@ -1,8 +1,5 @@
 #' Settings Server
 #'
-#' @param input provided by \pkg{Shiny}.
-#' @param output provided by \pkg{Shiny}.
-#' @param session provided by \pkg{Shiny}.
 #' @param user_settings a [shiny::reactiveValues()] list.
 #' @seealso [module_settings_ui()]
 #' @family modules

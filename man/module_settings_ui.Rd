@@ -15,15 +15,15 @@ Settings UI
 \seealso{
 \code{\link[=module_settings_server]{module_settings_server()}}
 
-Other modules: 
-\code{\link{module_about_ui}()},
-\code{\link{module_analysis_server}()},
-\code{\link{module_analysis_ui}()},
-\code{\link{module_import_server}()},
-\code{\link{module_import_ui}()},
-\code{\link{module_processing_server}()},
-\code{\link{module_processing_ui}()},
-\code{\link{module_settings_server}()}
+Other modules:
+\code{\link[=module_about_ui]{module_about_ui()}},
+\code{\link[=module_analysis_server]{module_analysis_server()}},
+\code{\link[=module_analysis_ui]{module_analysis_ui()}},
+\code{\link[=module_import_server]{module_import_server()}},
+\code{\link[=module_import_ui]{module_import_ui()}},
+\code{\link[=module_processing_server]{module_processing_server()}},
+\code{\link[=module_processing_ui]{module_processing_ui()}},
+\code{\link[=module_settings_server]{module_settings_server()}}
 }
 \concept{modules}
 \keyword{internal}

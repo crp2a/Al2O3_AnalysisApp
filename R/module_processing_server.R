@@ -1,8 +1,5 @@
 #' Post-Processing Server
 #'
-#' @param input provided by \pkg{Shiny}.
-#' @param output provided by \pkg{Shiny}.
-#' @param session provided by \pkg{Shiny}.
 #' @param user_data a [shiny::reactiveValues()] list with the
 #'  following elements: "`data`", "`info`" and "`structure`".
 #' @param user_settings a [shiny::reactiveValues()] list.

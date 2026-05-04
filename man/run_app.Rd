@@ -17,7 +17,7 @@ to display the application (see \code{\link[shiny:runApp]{shiny::runApp()}}).}
 A \pkg{shiny} application object.
 }
 \description{
-A wrapper for \code{\link[shiny:shinyApp]{shiny::shinyAppDir()}}.
+A wrapper for \code{\link[shiny:shinyAppDir]{shiny::shinyAppDir()}}.
 }
 \examples{
 \dontrun{
